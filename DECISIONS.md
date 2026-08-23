@@ -151,3 +151,18 @@ date: 2026-08-23
 decision: Make the GitHub repo public so Pages can serve it on the free plan.
 alternatives: Keep the repo private and skip the public URL. Open a Cloudflare account. Buy GitHub Pro.
 why: Private Pages is paid. Stage 3 requires PUBLIC_URL. A new host account is a third party. The game is meant to be shown.
+
+date: 2026-08-23
+decision: Prime Directive is now the product spec. The HELPFUL lab game is parked in legacy/ and is not the live path.
+alternatives: Keep iterating the lab-ticket loop. Run both games in one UI.
+why: Owner said switch. The earlier brief cut the map, the race, and the takeover fantasy. That was the boring game.
+
+date: 2026-08-23
+decision: Adopt the spec stack: React, TypeScript, Vite, Zustand. Save key is now aria.save.v1.
+alternatives: Stay on zero runtime dependencies. Keep the old save key.
+why: The new spec names that stack. The old closed list is void. A new key avoids silently loading the lab save into the new state.
+
+date: 2026-08-23
+decision: In-game system is A.R.I.A. Creator is Dr. Maya Chen. Product title stays Humanity.exe.
+alternatives: Keep MERIDIAN and Vasari. Rename the product.
+why: The spec names those characters. The repo and public URL already say Humanity.exe.

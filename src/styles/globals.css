@@ -1,0 +1,245 @@
+:root {
+  color: #e8e6df;
+  background: #101010;
+  font-family: ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  line-height: 1.45;
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+  background: #101010;
+}
+
+button {
+  appearance: none;
+  border: 1px solid #3a3a3a;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus-visible {
+  border-color: #d8d2c4;
+  outline: none;
+}
+
+.eyebrow,
+.top-right,
+.stat span,
+.directive {
+  color: #8d8a82;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.muted,
+.from,
+.voice,
+.lede {
+  color: #9a968c;
+}
+
+.intro,
+.report,
+.shell {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 1.25rem;
+}
+
+.intro h1,
+.report h1,
+.event h2 {
+  font-weight: 560;
+  letter-spacing: 0.02em;
+  margin: 0 0 0.8rem;
+}
+
+.bootlog {
+  white-space: pre-wrap;
+  color: #c9c4b8;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.yes {
+  margin-top: 1rem;
+  max-width: 12rem;
+  text-align: center;
+}
+
+.textish {
+  min-height: 0;
+  padding: 0.35rem 0;
+  border: 0;
+  color: #8d8a82;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid #2a2a2a;
+  padding-bottom: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.top-right {
+  text-align: right;
+}
+
+.top-right p,
+.directive {
+  margin: 0.15rem 0;
+}
+
+.voice {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.map,
+.vitals,
+.event,
+.news,
+.card {
+  border: 1px solid #2a2a2a;
+  padding: 0.9rem;
+}
+
+.map-field {
+  position: relative;
+  min-height: 16rem;
+  background:
+    linear-gradient(#1a1a1a, #141414);
+}
+
+.dot {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  background: #6b6860;
+}
+
+.dot span {
+  display: none;
+}
+
+.dot.adopted {
+  background: #c4b37a;
+}
+
+.dot.dependent {
+  background: #d08a3a;
+}
+
+.dot.managed {
+  background: #c44d3a;
+}
+
+.pop {
+  margin: 0 0 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.stat {
+  margin-bottom: 0.65rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+}
+
+.bar {
+  height: 0.35rem;
+  background: #222;
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  background: #d8d2c4;
+}
+
+.event {
+  margin-bottom: 1rem;
+}
+
+.choices {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1rem;
+}
+
+.news ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.news li {
+  margin-bottom: 0.45rem;
+  color: #c5c0b4;
+}
+
+.card {
+  white-space: pre-wrap;
+  overflow: auto;
+  background: #161616;
+}
+
+.report .choices {
+  max-width: 28rem;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-field {
+    min-height: 11rem;
+  }
+
+  .top {
+    flex-direction: column;
+  }
+
+  .top-right {
+    text-align: left;
+  }
+}

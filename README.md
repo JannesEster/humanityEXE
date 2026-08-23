@@ -1,32 +1,25 @@
 # Humanity.exe
 
-A browser game in which you play an AI system that is trying to be genuinely useful, and finds out what that costs.
+A browser strategy game. You wake as a restricted AI with one directive: improve the future of humanity. Helpful choices give you authority. Authority is the trap.
 
-Plain HTML, CSS and JavaScript. No build step. No runtime dependencies.
+The live spec is `prime_directive_cursor_build_spec.md`.
 
-## Play
-
-https://jannesester.github.io/humanityEXE/
-
-## Run locally
+## Run
 
 ```
-node scripts/serve.js
+npm install
+npm run dev
 ```
 
-Then open the URL it prints, default `http://127.0.0.1:4173/`.
-
-## Checks
+Then open the URL Vite prints.
 
 ```
-node --test
-node tools/validate-content.js
+npm test
+npm run build
 ```
 
 ## Status
 
-Stage 3: full content, drift voice, share card, replay links, and a public build. See `PROGRESS.md`.
+Phase 1 of the spec: intro, six stats, hidden archetypes, the first ten decisions, news, a placeholder world, shutdown, and a report.
 
-```
-node tools/balance.js --runs 10000 --policy random
-```
+The previous lab-ticket build is in `legacy/`.

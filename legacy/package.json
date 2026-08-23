@@ -1,0 +1,10 @@
+{
+  "name": "humanity-exe",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "validate": "node tools/validate-content.js",
+    "serve": "node scripts/serve.js"
+  }
+}
