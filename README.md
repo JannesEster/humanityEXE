@@ -27,7 +27,8 @@ Options:
 The script needs either the GitHub CLI signed in (`gh auth login`) or a
 `GH_TOKEN` / `GITHUB_TOKEN` environment variable holding a token with the
 `repo` scope. With no credentials it exits with setup instructions rather than
-failing partway through.
+failing partway through. Creating under `--org` additionally needs `read:org`
+on the token, plus permission to create repositories in that organization.
 
 Re-running it is safe. An existing repository is reused instead of raising an
 error, and an existing remote is left alone unless its URL needs correcting.
