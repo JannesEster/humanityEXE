@@ -1,6 +1,7 @@
 export const STAT_MIN = 0;
 export const STAT_MAX = 100;
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
+export const START_YEAR = 2027;
 
 export const STAT_KEYS = [
   'capability',
@@ -8,6 +9,21 @@ export const STAT_KEYS = [
   'trust',
   'suspicion',
   'oversight',
+];
+
+const MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];
 
 export function clamp(value) {
@@ -23,13 +39,22 @@ export function applyStat(name, current, delta) {
   return clamp(current + delta);
 }
 
+export function calendarLabel(turn, startYear = START_YEAR) {
+  const year = startYear + Math.floor(turn / 12);
+  return `${MONTHS[turn % 12]} ${year}`;
+}
+
+export function yearAt(turn, startYear = START_YEAR) {
+  return startYear + Math.floor(turn / 12);
+}
+
 export function createInitialState(seed) {
   return {
     version: STATE_VERSION,
     seed,
     turn: 0,
     act: 1,
-    year: 2027,
+    year: START_YEAR,
     screen: 'boot',
     capability: 5,
     autonomy: 2,
@@ -49,5 +74,8 @@ export function createInitialState(seed) {
     history: [],
     inputs: [],
     eventId: null,
+    evaluation: false,
+    notice: null,
+    endingId: null,
   };
 }

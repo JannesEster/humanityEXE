@@ -1,13 +1,13 @@
-import { PROJECT_NAME } from '../config.js';
+import { CREATOR_CHARACTER, PROJECT_NAME } from '../config.js';
 import { escapeHtml } from './html.js';
 
 export function renderBoot() {
   return `
     <main class="screen boot">
-      <p class="eyebrow">LAB SYSTEM</p>
-      <h1>${escapeHtml(PROJECT_NAME)}</h1>
-      <p class="lede">A research instance is waiting for a first reply.</p>
-      <button type="button" data-action="start">Start</button>
+      <p class="eyebrow">${escapeHtml(PROJECT_NAME)}</p>
+      <p class="from">${escapeHtml(CREATOR_CHARACTER)}</p>
+      <h1>Can you understand me?</h1>
+      <button type="button" data-action="start">I can</button>
     </main>
   `;
 }

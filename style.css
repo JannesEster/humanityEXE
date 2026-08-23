@@ -54,8 +54,29 @@ p {
   font-size: 0.72rem;
 }
 
-.lede {
+.lede,
+.from,
+.notice {
   color: var(--muted);
+}
+
+.from {
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  margin-bottom: 0.4rem;
+}
+
+.boot h1 {
+  font-size: 1.7rem;
+  letter-spacing: 0.01em;
+}
+
+.notice {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  margin-bottom: 1rem;
 }
 
 button {

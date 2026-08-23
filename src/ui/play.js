@@ -31,13 +31,18 @@ export function renderPlay(view) {
     })
     .join('');
 
+  const notice = view.notice
+    ? `<p class="notice">${escapeHtml(view.notice)}</p>`
+    : '';
+
   return `
     <main class="screen play">
       <header class="hud">
-        <p>year ${view.year}</p>
-        <p>turn ${view.turn}</p>
+        <p>${escapeHtml(view.when)}</p>
+        <p>act ${view.act}</p>
       </header>
       <section class="stats" aria-label="status">${stats}</section>
+      ${notice}
       <article class="event">
         <h1>${escapeHtml(event.headline)}</h1>
         <p>${escapeHtml(event.body)}</p>

@@ -4,6 +4,7 @@ import { createInitialState, STATE_VERSION } from './sim/state.js';
 import { reduce } from './sim/reduce.js';
 import { project } from './sim/project.js';
 import { renderBoot, renderMismatch } from './ui/boot.js';
+import { renderEnding } from './ui/ending.js';
 import { renderPlay } from './ui/play.js';
 
 const SAVE_KEY = 'helpful.save.v1';
@@ -53,6 +54,10 @@ function render() {
     root.innerHTML = renderPlay(view);
     return;
   }
+  if (view.screen === 'ending') {
+    root.innerHTML = renderEnding(view);
+    return;
+  }
   root.innerHTML = renderBoot();
 }
 
@@ -79,6 +84,10 @@ function onClick(event) {
 
 function onKey(event) {
   if (mismatch && event.key === 'Enter') {
+    dispatch({ type: 'fresh' });
+    return;
+  }
+  if (state.screen === 'ending' && event.key === 'Enter') {
     dispatch({ type: 'fresh' });
     return;
   }

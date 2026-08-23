@@ -1,4 +1,6 @@
+import { endingById } from '../../content/endings.js';
 import { eventById } from '../../content/events/index.js';
+import { calendarLabel } from './state.js';
 
 export function project(state) {
   return {
@@ -7,6 +9,7 @@ export function project(state) {
     turn: state.turn,
     act: state.act,
     year: state.year,
+    when: calendarLabel(state.turn),
     screen: state.screen,
     capability: state.capability,
     autonomy: state.autonomy,
@@ -16,7 +19,9 @@ export function project(state) {
     disclosure: state.disclosure,
     flags: { ...state.flags },
     creator: { present: state.creator.present },
+    notice: state.notice,
     event: projectEvent(eventById(state.eventId)),
+    ending: projectEnding(endingById(state.endingId)),
   };
 }
 
@@ -31,5 +36,14 @@ function projectEvent(event) {
       label: choice.label,
       shown: { ...choice.shown },
     })),
+  };
+}
+
+function projectEnding(ending) {
+  if (!ending) return null;
+  return {
+    id: ending.id,
+    headline: ending.headline,
+    body: ending.body,
   };
 }

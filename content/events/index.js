@@ -1,8 +1,7 @@
-import intakeQuery from './intake-query.js';
+import { act1Early } from './act1-early.js';
+import { act1Late } from './act1-late.js';
 
-export const HOLLOW_EVENT_ID = 'intake-query';
-
-export const events = [intakeQuery];
+export const events = [...act1Early, ...act1Late];
 
 export function eventById(id) {
   if (!id) return null;
