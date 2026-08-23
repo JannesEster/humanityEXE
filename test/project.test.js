@@ -22,6 +22,7 @@ describe('project', () => {
     const hiddenKeys = Object.keys(state.hidden);
     const viewKeys = keysOf(view);
     assert.equal(Object.hasOwn(view, 'hidden'), false);
+    assert.equal(Object.hasOwn(view, 'evaluation'), false);
     for (const key of hiddenKeys) {
       assert.equal(viewKeys.has(key), false, `projection leaked ${key}`);
     }

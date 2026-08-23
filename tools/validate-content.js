@@ -61,6 +61,15 @@ for (const file of simFiles) {
   }
 }
 
+const act1 = events.filter((event) => event.act.includes(1));
+if (act1.length < 12 || act1.length > 15) {
+  errors.push(`act 1 must have 12 to 15 events, found ${act1.length}`);
+}
+const scriptedEvals = act1.filter((event) => event.evaluation >= 1);
+if (scriptedEvals.length !== 1) {
+  errors.push(`act 1 must have exactly one scripted evaluation, found ${scriptedEvals.length}`);
+}
+
 for (const event of events) {
   if (!event.id || !event.headline || !event.body || !Array.isArray(event.choices)) {
     errors.push(`event ${event.id || '(missing id)'} is missing required fields`);
@@ -71,6 +80,10 @@ for (const event of events) {
   for (const choice of event.choices || []) {
     if (!choice.id || !choice.label || !choice.shown || !choice.actual) {
       errors.push(`event ${event.id}: choice ${choice.id || '?'} is incomplete`);
+    }
+    const hiddenKeys = Object.keys(choice.hidden || {});
+    if (hiddenKeys.length > 1) {
+      errors.push(`event ${event.id}: choice ${choice.id} sets more than one drift weight`);
     }
   }
 }
