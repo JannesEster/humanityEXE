@@ -21,4 +21,4 @@ node tools/validate-content.js
 
 ## Status
 
-Stage 0: hollow path. One event, two choices, five numbers, save and refresh. See `PROGRESS.md`.
+Stage 1: act 1 is playable. Twelve turns of lab work and a placeholder card at the act boundary. See `PROGRESS.md`.

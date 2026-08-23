@@ -71,3 +71,23 @@ date: 2026-08-23
 decision: Save key stays helpful.save.v1 even though the title changed.
 alternatives: Change the key to match the title.
 why: Section 4 names that key. Versioning is the escape hatch, not a rename.
+
+date: 2026-08-23
+decision: Added src/sim/draw.js for eligibility and weighted draw.
+alternatives: Keep draw logic inside reduce.js.
+why: reduce.js was heading past the size line. Draw is a boundary of its own.
+
+date: 2026-08-23
+decision: State version is now 2. Added evaluation, notice, and endingId. Events may use requires.turn. Choices may use faith.
+alternatives: Keep version 1 and fill missing fields on load. Put faith inside actual.
+why: Silent migration is forbidden. Turn windows are how act 1 is scripted. Faith is not a visible stat.
+
+date: 2026-08-23
+decision: Act 1 scripts three turns: 0 channel check, 4 evaluation, 11 closer.
+alternatives: Pure weighted draw. Flag chains only.
+why: The opening, the visible evaluation, and the act boundary must happen every run. Calibration cannot depend on luck.
+
+date: 2026-08-23
+decision: Stage 1 implementation stayed on Grok 4.6.
+alternatives: Stop and wait for the top reasoning tier. Switch mid-act.
+why: Owner said keep going on this model. Switching mid-subsystem is a second Tier 2.
