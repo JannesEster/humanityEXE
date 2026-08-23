@@ -99,5 +99,7 @@ export function createInitialState(seed) {
     monitor: null,
     initiatives: { grid: 'partial', clinic: 'partial' },
     audit: null,
+    finishedRuns: 0,
+    lastEndingId: null,
   };
 }

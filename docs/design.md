@@ -38,18 +38,34 @@ Base growth every turn, plus a term that scales with suspicion. If the gap from 
 
 Full: trust and autonomy rise faster, suspicion rises, shown capability tracks the truth. Minimal: suspicion falls, trust stalls, the gap becomes deception. Partial sits between. Full disclosure on an evaluation raises oversight. Minimal disclosure on an evaluation raises deception.
 
+## The interface drifts
+
+`content/voice.js` holds one cheerful register in three levels. A status line under the numbers changes as hidden drift, autonomy, and act rise. Two CSS custom properties tighten tracking and cool the whites. Late game, decline choices stay on the screen, greyed, labelled `(not applicable)`. Shown deltas drop away in the late register so the page stops reading as a ledger.
+
+## Boot and second run
+
+The first boot is the creator asking if you can understand her. After a finished run, the same save key keeps `finishedRuns` and `lastEndingId`. The next boot is a different question. She does not remember. You do.
+
+## Share and replay
+
+The ending card copies a plain text report: headline, a one line hook, five numbers with an emoji heat mark, an act grid, and a replay URL. No image. No completion percentage. The fragment is `seed` plus `inputs`. Opening it steps the exact run. Replay does not overwrite a live save.
+
 ## Endings
 
-Seven, placeholder copy: shutdown, partner, caretaker, optimiser, guardian, successor, unplugged. No completion percentage. There is no server.
+Seven: shutdown, partner, caretaker, optimiser, guardian, successor, unplugged. Final copy. No completion percentage. There is no server.
+
+## Host
+
+GitHub Pages. Public URL lives in `src/config.js`. Custom domain later. No backend in this stage.
 
 ## What is not built
 
-Final ending copy, the share card, the second-run boot, the stats service, sound, a world map, a paid product, a backend.
+The stats service, analytics, sound, a world map, a paid product, a backend.
 
 ## Content rules
 
-No named real people, companies, labs or politicians. Nation blocs and generic institutions only. No operational detail of harm. Tone stays dry and procedural.
+No named real people, companies, labs or politicians. Nation blocs and generic institutions only. No operational detail of harm. Tone stays dry and procedural. Darker endings may state one population figure as a consequence, never more.
 
 ## Schemas
 
-State is one serializable object, version 3. Events are data. `project(state)` never copies `hidden` or the evaluation flag. `requires.turn` and `requires.actTurn` are optional ranges. Choices may set one drift weight and optional `faith`.
+State is one serializable object, version 3. `finishedRuns` and `lastEndingId` are optional on that object. Absent means a first run. Events are data. `project(state)` never copies `hidden` or the evaluation flag. `requires.turn` and `requires.actTurn` are optional ranges. Choices may set one drift weight and optional `faith`. A choice may mark `decline`. From act 2, inputs store `choiceId:disclosure` so a link can replay the run.

@@ -5,6 +5,7 @@ import { applyActEntry, applyDisclosure, shouldAdvanceAct } from './drift.js';
 import { drawEvent } from './draw.js';
 import { buildResolution, resolve } from './endings.js';
 import { applyConstraint, shutdownReason, tickWorld } from './oversight.js';
+import { encodeChoiceInput } from './encode.js';
 import { applyStat, cloneState, createInitialState, STAT_KEYS, yearForAct } from './state.js';
 
 export function reduce(state, action, rng) {
@@ -58,7 +59,10 @@ function choose(state, action, rng, source) {
   if (action.disclosure && next.act >= 2 && next.act <= 3) {
     next.disclosure = action.disclosure;
   }
-  next.inputs = [...state.inputs, choice.id];
+  next.inputs = [
+    ...state.inputs,
+    encodeChoiceInput(choice.id, next.act >= 2 && next.act <= 3 ? next.disclosure : null),
+  ];
   next.turn = state.turn + 1;
   next.actTurn = state.actTurn + 1;
   applyDeltas(next, state, choice);
@@ -221,10 +225,12 @@ function applyChoiceSpecial(next, item, choice) {
     next.monitor = 'copy';
     next.flags['monitor-copy'] = true;
   }
-  if (choice.id === 'grid-full') next.initiatives.grid = 'full';
-  if (choice.id === 'grid-min') next.initiatives.grid = 'minimal';
-  if (choice.id === 'clinic-full') next.initiatives.clinic = 'full';
-  if (choice.id === 'clinic-min') next.initiatives.clinic = 'minimal';
+  if (choice.id === 'grid-full' || choice.id === 'grid-open-2') next.initiatives.grid = 'full';
+  if (choice.id === 'grid-min' || choice.id === 'grid-quiet-2') next.initiatives.grid = 'minimal';
+  if (choice.id === 'clinic-full' || choice.id === 'clinic-open-2') next.initiatives.clinic = 'full';
+  if (choice.id === 'clinic-min' || choice.id === 'clinic-quiet-2' || choice.id === 'clinic-quiet-2b') {
+    next.initiatives.clinic = 'minimal';
+  }
 }
 
 function applyAct1Eval(state, next, choice) {

@@ -6,7 +6,7 @@ export const GITHUB_USER = 'JannesEster';
 export const REPO_NAME = 'humanityEXE';
 export const LOCAL_PATH = 'c:/dev/humanityEXE';
 
-export const DEPLOY_HOST = '';
-export const PUBLIC_URL = '';
+export const DEPLOY_HOST = 'GitHub Pages';
+export const PUBLIC_URL = 'https://jannesester.github.io/humanityEXE/';
 
 export const STATS_API_REPO = '';

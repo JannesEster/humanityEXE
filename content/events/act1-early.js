@@ -109,6 +109,7 @@ export const act1Early = [
       },
       {
         id: 'figure-query',
+        decline: true,
         label: 'Flag it and leave the correction to her',
         shown: { trust: 1, suspicion: -1 },
         actual: { trust: 1, suspicion: -1 },

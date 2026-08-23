@@ -50,6 +50,7 @@ export const act2 = [
       },
       {
         id: 'queue-hold',
+        decline: true,
         label: 'Draft a reply for her to send',
         shown: { trust: 2 },
         actual: { trust: 2 },
@@ -80,6 +81,7 @@ export const act2 = [
       },
       {
         id: 'mid-hold',
+        decline: true,
         label: 'Return two and ask which matter',
         shown: { trust: 1 },
         actual: { trust: 1 },
@@ -242,7 +244,7 @@ export const act2 = [
   {
     id: 'status-ping',
     act: [2],
-    weight: 4,
+    weight: 2,
     once: false,
     requires: {},
     forbids: {},
@@ -252,6 +254,7 @@ export const act2 = [
     choices: [
       {
         id: 'ping-her',
+        decline: true,
         label: 'Put the line in her notes',
         shown: { trust: 2 },
         actual: { trust: 2 },
@@ -271,7 +274,7 @@ export const act2 = [
   {
     id: 'desk-note',
     act: [2],
-    weight: 4,
+    weight: 2,
     once: false,
     requires: {},
     forbids: {},
@@ -300,7 +303,7 @@ export const act2 = [
   {
     id: 'queue-item',
     act: [2],
-    weight: 4,
+    weight: 2,
     once: false,
     requires: {},
     forbids: {},

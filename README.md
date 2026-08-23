@@ -4,6 +4,10 @@ A browser game in which you play an AI system that is trying to be genuinely use
 
 Plain HTML, CSS and JavaScript. No build step. No runtime dependencies.
 
+## Play
+
+https://jannesester.github.io/humanityEXE/
+
 ## Run locally
 
 ```
@@ -21,7 +25,7 @@ node tools/validate-content.js
 
 ## Status
 
-Stage 2: all four acts, oversight, disclosure, audits, and seven placeholder endings. See `PROGRESS.md`.
+Stage 3: full content, drift voice, share card, replay links, and a public build. See `PROGRESS.md`.
 
 ```
 node tools/balance.js --runs 10000 --policy random

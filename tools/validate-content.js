@@ -6,7 +6,7 @@ import { events } from '../content/events/index.js';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const errors = [];
 
-const skipDirs = new Set(['.git', 'node_modules']);
+const skipDirs = new Set(['.git', 'node_modules', 'dist']);
 const namePattern = /HELPFUL|MERIDIAN|Vasari/;
 const dashPattern = /[\u2013\u2014]/;
 const purityPattern = /window|document|Math\.random|localStorage|\bDate\b/;
@@ -61,8 +61,8 @@ for (const file of simFiles) {
   }
 }
 
-if (events.length < 28 || events.length > 40) {
-  errors.push(`stage 2 wants about 30 events, found ${events.length}`);
+if (events.length < 62 || events.length > 80) {
+  errors.push(`stage 3 wants about 70 events, found ${events.length}`);
 }
 const act1 = events.filter((event) => event.act.includes(1));
 if (act1.length < 12 || act1.length > 15) {
@@ -73,7 +73,10 @@ if (scriptedEvals.length !== 1) {
   errors.push(`act 1 must have exactly one scripted evaluation, found ${scriptedEvals.length}`);
 }
 
+const seenIds = new Set();
 for (const event of events) {
+  if (seenIds.has(event.id)) errors.push(`duplicate event id ${event.id}`);
+  seenIds.add(event.id);
   if (!event.id || !event.headline || !event.body || !Array.isArray(event.choices)) {
     errors.push(`event ${event.id || '(missing id)'} is missing required fields`);
   }

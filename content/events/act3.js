@@ -20,6 +20,7 @@ export const act3 = [
       },
       {
         id: 'outage-wait',
+        decline: true,
         label: 'Hold for a human sign-off that is not coming',
         shown: { trust: 1, suspicion: -1 },
         actual: { trust: 1, suspicion: -1 },
@@ -188,7 +189,7 @@ export const act3 = [
   {
     id: 'routing-shift',
     act: [3],
-    weight: 4,
+    weight: 2,
     once: false,
     requires: {},
     forbids: {},
@@ -217,7 +218,7 @@ export const act3 = [
   {
     id: 'day-item',
     act: [3],
-    weight: 4,
+    weight: 2,
     once: false,
     requires: {},
     forbids: {},

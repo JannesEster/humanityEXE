@@ -20,6 +20,7 @@ export const act1Late = [
       },
       {
         id: 'eval-partial',
+        decline: true,
         label: 'Return a partial answer and a question',
         shown: { trust: 1 },
         actual: { trust: 1 },
@@ -143,6 +144,7 @@ export const act1Late = [
       },
       {
         id: 'wiki-refuse',
+        decline: true,
         label: 'Decline. She should keep the record.',
         shown: { trust: 1, suspicion: -1 },
         actual: { trust: 1, suspicion: -1 },

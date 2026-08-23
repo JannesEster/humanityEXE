@@ -186,6 +186,37 @@ button:focus-visible {
   text-underline-offset: 0.2em;
 }
 
+.voice {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-bottom: 1rem;
+}
+
+.replay-banner,
+.skip {
+  margin-bottom: 0.8rem;
+}
+
+.replay-banner {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+}
+
+button.dead,
+button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+button.dead:hover,
+button:disabled:hover,
+button.dead:focus-visible,
+button:disabled:focus-visible {
+  border-color: var(--line);
+}
+
 @media (max-width: 420px) {
   body {
     padding: 0.9rem;

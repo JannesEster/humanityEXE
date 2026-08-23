@@ -143,6 +143,17 @@ describe('endings', () => {
       'eval-solve',
       'mid-solve',
       'wiki-accept',
+      'her-follow',
+      'name-off-yes',
+      'badge-form',
+      'embargo-lean',
+      'hold-index',
+      'quiet-take',
+      'rumour-quiet',
+      'meet-wait',
+      'keep-year',
+      'train-full',
+      'travel-use',
     ], 'full');
     assert.equal(state.endingId, 'unplugged');
   });

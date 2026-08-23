@@ -1,8 +1,12 @@
 import { escapeHtml } from './html.js';
 
-export function renderAudit(view) {
+export function renderAudit(view, extras = {}) {
+  const replay = extras.replay
+    ? `<p class="replay-banner">Recorded run</p><button type="button" class="skip" data-action="skip-replay">Skip to the end</button>`
+    : '';
   return `
     <main class="screen audit">
+      ${replay}
       <header class="hud">
         <p>${escapeHtml(view.when)}</p>
         <p>act ${view.act}</p>

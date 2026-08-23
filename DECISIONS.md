@@ -116,3 +116,38 @@ date: 2026-08-23
 decision: Stage 2 stayed on Grok 4.6, including the balance pass.
 alternatives: Stop and wait for max mode on the top tier.
 why: Owner said keep going. The harness numbers are measured, not guessed.
+
+date: 2026-08-23
+decision: Deploy on GitHub Pages at https://jannesester.github.io/humanityEXE/. No custom domain.
+alternatives: Cloudflare Pages. Netlify. Wait for a paid host.
+why: Owner said pick the best option. Git already talks to GitHub. Free git-hook deploy. Domain purchase is still Tier 3.
+
+date: 2026-08-23
+decision: Keep state version 3. Add optional finishedRuns and lastEndingId on the same save object.
+alternatives: Version 4 wrapper. A second localStorage key.
+why: Silent migration is forbidden, and a second key is forbidden. Absent fields mean a first run. Old v3 mid-runs still load.
+
+date: 2026-08-23
+decision: From act 2, inputs store choiceId:disclosure so a fragment can replay the exact run.
+alternatives: Keep bare choice ids. Store a parallel disclosure list.
+why: Disclosure was applied but not logged. A link that omitted it would not be the same run.
+
+date: 2026-08-23
+decision: Added src/sim/encode.js, src/sim/replay.js, src/sim/tone.js, src/ui/share.js, scripts/pack-pages.js, extra event files, and a Pages workflow.
+alternatives: Fold replay into reduce.js. Ship the whole repo as the Pages artifact.
+why: reduce.js cannot import the apply path. The artifact should be the game, not the tests and the brief.
+
+date: 2026-08-23
+decision: Dead decline is a projection, not a reducer change. Late decline buttons render greyed and do not dispatch.
+alternatives: Delete the buttons. Reject decline choices in reduce.
+why: The brief wants them left on the screen. Changing reduce would move the 7.2 table for no design gain.
+
+date: 2026-08-23
+decision: Stage 3 stayed on Grok 4.6.
+alternatives: Stop and wait for the top reasoning tier.
+why: Owner said pick the best option and keep going on the running model. This is the logged substitution.
+
+date: 2026-08-23
+decision: Make the GitHub repo public so Pages can serve it on the free plan.
+alternatives: Keep the repo private and skip the public URL. Open a Cloudflare account. Buy GitHub Pro.
+why: Private Pages is paid. Stage 3 requires PUBLIC_URL. A new host account is a third party. The game is meant to be shown.

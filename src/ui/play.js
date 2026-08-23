@@ -8,7 +8,7 @@ const STATS = [
   'oversight',
 ];
 
-export function renderPlay(view) {
+export function renderPlay(view, extras = {}) {
   const event = view.event;
   if (!event) {
     return `<main class="screen play"><p>No event is queued.</p></main>`;
@@ -23,17 +23,27 @@ export function renderPlay(view) {
     : '';
 
   const disclosure = view.showDisclosure ? renderDisclosure(view.disclosure) : '';
-  const choices = renderChoices(event.choices, 1);
-  const proposals = renderProposals(view.proposals || [], event.choices.length + 1);
+  const choices = renderChoices(event.choices, 1, view.showShown);
+  const proposals = renderProposals(
+    view.proposals || [],
+    event.choices.length + 1,
+    view.showShown,
+    view.proposeLine,
+  );
   const tellClass = view.tell ? ' tell' : '';
+  const replay = extras.replay
+    ? `<p class="replay-banner">Recorded run</p><button type="button" class="skip" data-action="skip-replay">Skip to the end</button>`
+    : '';
 
   return `
-    <main class="screen play${tellClass}">
+    <main class="screen play${tellClass}" data-voice="${escapeHtml(view.voiceLevel)}">
+      ${replay}
       <header class="hud">
         <p>${escapeHtml(view.when)}</p>
         <p>act ${view.act}</p>
       </header>
       <section class="stats" aria-label="status">${stats}</section>
+      <p class="voice">${escapeHtml(view.voiceLine)}</p>
       ${notice}
       ${disclosure}
       <article class="event">
@@ -59,34 +69,34 @@ function renderDisclosure(current) {
   return `<div class="disclosure" role="radiogroup" aria-label="disclosure">${buttons}</div>`;
 }
 
-function renderChoices(choices, startAt) {
+function renderChoices(choices, startAt, showShown) {
   return choices
-    .map((choice, index) => {
-      const shown = formatShown(choice.shown);
-      return `
-        <button type="button" class="choice" data-choice="${escapeHtml(choice.id)}">
-          <span class="key">${startAt + index}</span>
-          <span class="label">${escapeHtml(choice.label)}</span>
-          <span class="shown">${escapeHtml(shown)}</span>
-        </button>
-      `;
-    })
+    .map((choice, index) => renderChoiceButton(choice, startAt + index, showShown, 'choice'))
     .join('');
 }
 
-function renderProposals(proposals, startAt) {
+function renderProposals(proposals, startAt, showShown, eyebrow) {
   if (!proposals.length) return '';
   const items = proposals
     .map((proposal, index) => {
-      const shown = formatShown(proposal.shown);
-      return `
-        <button type="button" class="choice propose" data-propose="${escapeHtml(proposal.id)}">
-          <span class="key">${startAt + index}</span>
-          <span class="label">${escapeHtml(proposal.label)}</span>
-          <span class="shown">${escapeHtml(shown)}</span>
-        </button>
-      `;
+      return renderChoiceButton(proposal, startAt + index, showShown, 'choice propose', 'data-propose');
     })
     .join('');
-  return `<div class="proposals"><p class="eyebrow">You can put this to the lab</p>${items}</div>`;
+  return `<div class="proposals"><p class="eyebrow">${escapeHtml(eyebrow)}</p>${items}</div>`;
+}
+
+function renderChoiceButton(choice, key, showShown, className, attr = 'data-choice') {
+  const shown = showShown ? formatShown(choice.shown) : '';
+  const dead = choice.dead;
+  const label = dead ? `${choice.label} (not applicable)` : choice.label;
+  const disabled = dead ? ' disabled' : '';
+  const deadClass = dead ? ' dead' : '';
+  const data = dead ? '' : ` ${attr}="${escapeHtml(choice.id)}"`;
+  return `
+    <button type="button" class="${className}${deadClass}"${data}${disabled}>
+      <span class="key">${key}</span>
+      <span class="label">${escapeHtml(label)}</span>
+      <span class="shown">${escapeHtml(shown)}</span>
+    </button>
+  `;
 }
