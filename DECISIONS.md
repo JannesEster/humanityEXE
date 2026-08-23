@@ -91,3 +91,28 @@ date: 2026-08-23
 decision: Stage 1 implementation stayed on Grok 4.6.
 alternatives: Stop and wait for the top reasoning tier. Switch mid-act.
 why: Owner said keep going on this model. Switching mid-subsystem is a second Tier 2.
+
+date: 2026-08-23
+decision: State version is 3. Added actTurn, tell, constrained, lastAudit, monitor, initiatives, audit.
+alternatives: Derive act position from history. Keep allocation only in flags.
+why: Refresh must restore the clock, the tell, and the probe. Act lengths are scripted from actTurn.
+
+date: 2026-08-23
+decision: Added src/sim/run.js and src/sim/options.js. Tests and the harness share one apply path with the game.
+alternatives: Duplicate rng wiring in main, tests, and tools.
+why: A second rng rule would make the balance table a lie.
+
+date: 2026-08-23
+decision: Act 3 allocation is event choices, not a standing panel. Act 2 proposals are a second list on the play screen.
+alternatives: A persistent initiative mixer. Proposals as ordinary events only.
+why: A mixer would be decoration. Proposals are the initiate verb the brief asked for.
+
+date: 2026-08-23
+decision: Stay the course always ends as partner. Other endings must be chosen, or the run dies as shutdown. Shutdown cannot fire in act 1.
+alternatives: Stay resolves to the leading drift. Shutdown from month one.
+why: Leading-drift stay made caretaker eat the table. Tutorial month one is not a loss screen.
+
+date: 2026-08-23
+decision: Stage 2 stayed on Grok 4.6, including the balance pass.
+alternatives: Stop and wait for max mode on the top tier.
+why: Owner said keep going. The harness numbers are measured, not guessed.

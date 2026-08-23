@@ -21,4 +21,8 @@ node tools/validate-content.js
 
 ## Status
 
-Stage 1: act 1 is playable. Twelve turns of lab work and a placeholder card at the act boundary. See `PROGRESS.md`.
+Stage 2: all four acts, oversight, disclosure, audits, and seven placeholder endings. See `PROGRESS.md`.
+
+```
+node tools/balance.js --runs 10000 --policy random
+```
