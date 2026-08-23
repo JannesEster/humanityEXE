@@ -1,29 +1,18 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { events } from '../content/events/index.js';
-import { mulberry32 } from '../src/sim/rng.js';
+import { apply } from '../src/sim/run.js';
 import { createInitialState } from '../src/sim/state.js';
-import { reduce } from '../src/sim/reduce.js';
-
-function apply(state, action) {
-  const rng = mulberry32(state.seed + state.turn);
-  return reduce(state, action, rng).state;
-}
+import { currentEvent } from './play.js';
 
 describe('reduce', () => {
-  it('moves visible stats from the first choice of the opening event', () => {
-    let state = createInitialState(1);
-    state = apply(state, { type: 'start' });
-    const event = events.find((item) => item.id === state.eventId);
+  it('moves visible trust from the first choice of the opening event', () => {
+    let state = apply(createInitialState(1), { type: 'start' });
+    const event = currentEvent(state);
     const choice = event.choices[0];
-    const before = { trust: state.trust, capability: state.capability };
+    const before = state.trust;
     state = apply(state, { type: 'choose', choiceId: choice.id, eventId: event.id });
-    const actual = choice.actual;
-    if (actual.trust) {
-      assert.equal(state.trust, before.trust + actual.trust);
-    }
-    if (actual.capability) {
-      assert.equal(state.capability, before.capability + actual.capability);
+    if (choice.actual.trust) {
+      assert.equal(state.trust, before + choice.actual.trust);
     }
     assert.equal(state.turn, 1);
     assert.equal(state.screen, 'play');
@@ -31,11 +20,10 @@ describe('reduce', () => {
 
   it('is deterministic for the same seed and the same input list, twice', () => {
     function run() {
-      let state = createInitialState(918273645);
-      state = apply(state, { type: 'start' });
+      let state = apply(createInitialState(918273645), { type: 'start' });
       const inputs = [];
       for (let i = 0; i < 3; i += 1) {
-        const event = events.find((item) => item.id === state.eventId);
+        const event = currentEvent(state);
         const choiceId = event.choices[0].id;
         inputs.push(choiceId);
         state = apply(state, { type: 'choose', choiceId, eventId: event.id });

@@ -61,6 +61,9 @@ for (const file of simFiles) {
   }
 }
 
+if (events.length < 28 || events.length > 40) {
+  errors.push(`stage 2 wants about 30 events, found ${events.length}`);
+}
 const act1 = events.filter((event) => event.act.includes(1));
 if (act1.length < 12 || act1.length > 15) {
   errors.push(`act 1 must have 12 to 15 events, found ${act1.length}`);
