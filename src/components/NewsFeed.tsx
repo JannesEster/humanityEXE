@@ -6,14 +6,17 @@ interface Props {
 
 export function NewsFeed({ items }: Props) {
   return (
-    <section className="news" aria-label="News">
-      <p className="eyebrow">NEWS</p>
+    <section className="news panel" aria-label="News">
+      <p className="eyebrow">News</p>
       {items.length === 0 ? (
-        <p className="muted">No public signal yet.</p>
+        <p className="muted">No public line yet.</p>
       ) : (
         <ul>
-          {items.slice(0, 6).map((item) => (
-            <li key={item.id}>{item.headline}</li>
+          {items.map((item) => (
+            <li key={item.id}>
+              <span className="muted">Y{item.year} · </span>
+              {item.headline}
+            </li>
           ))}
         </ul>
       )}

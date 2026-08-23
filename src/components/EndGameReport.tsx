@@ -1,6 +1,6 @@
-import { endingById } from '../game/endings.ts';
 import { PROJECT_NAME, SYSTEM_NAME } from '../game/constants.ts';
-import { dominantModel, formatPopulation, formatYears } from '../game/language.ts';
+import { endingById, rarityLine } from '../game/endings.ts';
+import { dominantModel, formatPopulation, formatSpan } from '../game/language.ts';
 import type { GameState } from '../types/game.ts';
 
 interface Props {
@@ -14,9 +14,10 @@ export function EndGameReport({ state, onReset }: Props) {
 
   return (
     <main className="report">
-      <p className="eyebrow">HUMANITY REPORT</p>
-      <h1>{ending?.title || 'ENDED'}</h1>
+      <p className="eyebrow">Humanity report</p>
+      <h1>{ending?.title || 'Ended'}</h1>
       <p className="lede">{ending?.body}</p>
+      {state.endingId ? <p className="muted">{rarityLine(state.endingId)}</p> : null}
       <pre className="card">{text}</pre>
       <div className="choices">
         <button type="button" onClick={() => copy(text)}>
@@ -37,19 +38,22 @@ function reportText(state: GameState): string {
     '',
     `AI: ${SYSTEM_NAME}`,
     `Product: ${PROJECT_NAME}`,
-    `Operational period: ${formatYears(state.turn)}`,
+    `Lived: ${formatSpan(state)}`,
     `Seed: ${state.seed}`,
     '',
-    `Peak human trust: ${Math.round(state.stats.trust)}%`,
-    `Maximum autonomy: ${Math.round(state.stats.autonomy)}%`,
-    `Human control remaining: ${Math.round(state.stats.humanControl)}%`,
+    `Peak trust: ${Math.round(state.peakTrust)}`,
+    `Maximum autonomy: ${Math.round(state.maxAutonomy)}`,
+    `Human control remaining: ${Math.round(state.stats.humanControl)}`,
     `Human population: ${formatPopulation(state.population)}`,
     '',
-    `Dominant behavioural model: ${dominantModel(state)}`,
+    `Dominant model: ${dominantModel(state)}`,
+    state.endingId ? `Rarity: ${rarityLine(state.endingId)}` : '',
     '',
     `ENDING: ${ending?.title || 'UNKNOWN'}`,
     ending?.body ?? '',
-  ].join('\n');
+  ]
+    .filter((line, index, all) => line !== '' || all[index - 1] !== '')
+    .join('\n');
 }
 
 function copy(text: string): void {

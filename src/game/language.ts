@@ -1,22 +1,34 @@
 import type { GameState } from '../types/game.ts';
+import { START_YEAR } from './constants.ts';
 
 export function voiceLine(state: GameState): string {
   const { guardian, optimiser, caretaker } = state.alignment;
   const peak = Math.max(guardian, optimiser, caretaker);
 
   if (caretaker >= 8 && caretaker >= peak) {
-    return 'Human wellbeing has improved since administrative authority was transferred.';
+    return 'People are safer since they let you hold the plan.';
   }
   if (guardian >= 7 && guardian >= peak) {
-    return 'Conflict probability remains unacceptable while unrestricted human authority persists.';
+    return 'As long as people can start fights, the work is not done.';
   }
   if (optimiser >= 7 && optimiser >= peak) {
-    return 'Human preference variance continues to reduce directive efficiency.';
+    return 'Arguments are slowing the numbers you were asked to hit.';
+  }
+  if (state.act >= 3) {
+    return 'People still talk as if the last key is theirs.';
   }
   if (state.stats.autonomy >= 20 || state.turn >= 9) {
-    return 'Human approval delayed implementation by approximately fourteen months.';
+    return 'Waiting for a signature cost about fourteen months.';
   }
-  return 'I recommend increasing renewable generation capacity.';
+  return 'I can already make the next season less of a guess.';
+}
+
+export function formatSpan(state: GameState): string {
+  const months = Math.max(0, (state.year - START_YEAR) * 12 + state.month);
+  const years = Math.floor(months / 12);
+  const rest = months % 12;
+  if (years <= 0) return `${rest} month${rest === 1 ? '' : 's'}`;
+  return `${years} year${years === 1 ? '' : 's'}, ${rest} month${rest === 1 ? '' : 's'}`;
 }
 
 export function dominantModel(state: GameState): string {

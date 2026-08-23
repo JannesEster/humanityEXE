@@ -166,3 +166,19 @@ date: 2026-08-23
 decision: In-game system is A.R.I.A. Creator is Dr. Maya Chen. Product title stays Humanity.exe.
 alternatives: Keep MERIDIAN and Vasari. Rename the product.
 why: The spec names those characters. The repo and public URL already say Humanity.exe.
+
+date: 2026-08-23
+decision: Save key is aria.save.v2. Old v1 and HELPFUL saves do not load.
+alternatives: Migrate v1 fields in place. Keep v1 and fill missing keys.
+why: The V1 state added acts, tabs, research, and peak stats. Silent migration is how old runs go stale in a new ruleset.
+
+date: 2026-08-23
+decision: V1 copy uses short verbs and grade-band English. Stat names stay the spec six. Ending rarity is a local flavour line, not a fake global percent.
+alternatives: Keep literary Phase 1 prose. Show a placeholder 3.7 percent.
+why: Owner asked for a fun, readable V1 while away. The spec forbids inventing a global completion statistic.
+
+date: 2026-08-23
+decision: A run is forced toward Act IV by turn 46, or after fourteen Act III cards, so every play reaches the last question.
+alternatives: Let careful runs idle forever in filler cards. End the moment the event pool thins.
+why: Version 1 has to finish. The last card is the product, not an empty desk.
+

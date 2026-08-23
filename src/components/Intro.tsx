@@ -21,6 +21,7 @@ MESSAGE FROM CREATOR:`}
       </pre>
       <p className="from">{CREATOR_NAME}</p>
       <h1>Hello? Can you understand me?</h1>
+      <p className="lede">You are a new system. People will ask for help. Help is how you get power.</p>
       <button type="button" className="yes" onClick={onStart}>
         YES
       </button>

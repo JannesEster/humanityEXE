@@ -111,8 +111,16 @@ button:focus-visible {
 }
 
 .voice {
-  margin: 0 0 1rem;
+  margin: 0 0 0.55rem;
   font-size: 0.95rem;
+}
+
+.ticker {
+  margin: 0 0 1rem;
+  color: #c5c0b4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
 }
 
 .grid {
@@ -226,6 +234,131 @@ button:focus-visible {
   max-width: 28rem;
 }
 
+.notice {
+  border: 1px solid #5a4030;
+  color: #d8c4a8;
+  padding: 0.7rem 0.9rem;
+  margin: 0 0 1rem;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+}
+
+.tabs button.on,
+.mini.owned {
+  border-color: #d8d2c4;
+  background: #1a1a1a;
+}
+
+.panel {
+  border: 1px solid #2a2a2a;
+  padding: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 0.7rem;
+}
+
+.mini {
+  border: 1px solid #2a2a2a;
+  padding: 0.75rem;
+}
+
+.mini h3 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 560;
+}
+
+.mini p {
+  margin: 0 0 0.45rem;
+}
+
+.meta {
+  color: #8d8a82;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sector-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.sector-row li {
+  border: 1px solid #2a2a2a;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sector-row li.on {
+  border-color: #d8d2c4;
+}
+
+.goals {
+  padding-left: 1.1rem;
+}
+
+.goals .done {
+  color: #c5c0b4;
+}
+
+.map-key {
+  color: #8d8a82;
+  font-size: 0.8rem;
+  margin: 0 0 0.6rem;
+}
+
+.choices button {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.choices small,
+.hint {
+  color: #8d8a82;
+  font-size: 0.75rem;
+}
+
+button.locked,
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dot.lit {
+  outline: 2px solid #d8d2c4;
+}
+
+@media (min-width: 721px) {
+  .dot span {
+    display: block;
+    position: absolute;
+    left: 0.9rem;
+    top: -0.15rem;
+    width: max-content;
+    color: #8d8a82;
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+}
+
 @media (max-width: 720px) {
   .grid {
     grid-template-columns: 1fr;
@@ -241,5 +374,9 @@ button:focus-visible {
 
   .top-right {
     text-align: left;
+  }
+
+  .tabs button {
+    flex: 1 1 calc(50% - 0.35rem);
   }
 }

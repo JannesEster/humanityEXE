@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { RegionState } from '../types/game.ts';
 
 const POS: Record<string, { x: number; y: number }> = {
@@ -26,9 +27,13 @@ interface Props {
 }
 
 export function WorldMap({ regions }: Props) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const open = regions.find((region) => region.id === openId) ?? null;
+
   return (
     <section className="map" aria-label="World influence">
-      <p className="eyebrow">WORLD</p>
+      <p className="eyebrow">World</p>
+      <p className="map-key">Grey is quiet. Gold is in use. Orange needs you. Red is yours.</p>
       <div className="map-field">
         {regions.map((region) => {
           const pos = POS[region.id];
@@ -37,15 +42,24 @@ export function WorldMap({ regions }: Props) {
             <button
               key={region.id}
               type="button"
-              className={`dot ${tone(region)}`}
+              className={`dot ${tone(region)} ${openId === region.id ? 'lit' : ''}`}
               style={{ left: `${pos.x}%`, top: `${pos.y}%` }}
-              title={`${region.name} · influence ${Math.round(region.influence)}`}
+              title={`${region.name}. Your hold ${Math.round(region.influence)}`}
+              onClick={() => setOpenId(region.id === openId ? null : region.id)}
             >
               <span>{region.name}</span>
             </button>
           );
         })}
       </div>
+      {open ? (
+        <p className="lede">
+          {open.name}. Trust {Math.round(open.trust)}. Need {Math.round(open.dependency)}. Your hold{' '}
+          {Math.round(open.influence)}.
+        </p>
+      ) : (
+        <p className="muted">Tap a point to see a place.</p>
+      )}
     </section>
   );
 }

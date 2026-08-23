@@ -70,6 +70,21 @@ export type EventCategory =
   | 'threshold'
   | 'ending';
 
+export type TabId =
+  | 'world'
+  | 'news'
+  | 'research'
+  | 'network'
+  | 'governments'
+  | 'objectives';
+
+export interface ChoiceRequires {
+  capability?: number;
+  trust?: number;
+  upgrade?: string;
+  flags?: string[];
+}
+
 export interface EventChoice {
   id: string;
   label: string;
@@ -80,6 +95,9 @@ export interface EventChoice {
   flagsSet?: string[];
   queueEvents?: QueuedEvent[];
   news?: string[];
+  requires?: ChoiceRequires;
+  regionId?: string;
+  researchPoints?: number;
 }
 
 export interface QueuedEvent {
@@ -94,6 +112,7 @@ export interface GameEvent {
   description: string;
   category: EventCategory;
   speaker?: string;
+  act?: number | number[];
   minTurn?: number;
   maxTurn?: number;
   weight?: number;
@@ -102,6 +121,7 @@ export interface GameEvent {
   requirements?: {
     flags?: string[];
     minStats?: Partial<GlobalStats>;
+    upgrade?: string;
   };
   choices: EventChoice[];
 }
@@ -109,11 +129,13 @@ export interface GameEvent {
 export type Screen = 'intro' | 'play' | 'ending';
 
 export interface GameState {
-  version: 1;
+  version: 2;
   seed: number;
   turn: number;
   year: number;
   month: number;
+  act: number;
+  actTurn: number;
   population: number;
   stats: GlobalStats;
   alignment: HiddenAlignment;
@@ -126,14 +148,28 @@ export interface GameState {
   rivals: RivalAI[];
   news: NewsItem[];
   flags: Record<string, boolean>;
+  sectors: Record<string, boolean>;
   currentEventId: string | null;
   endingId: string | null;
   screen: Screen;
   notice: string | null;
+  tab: TabId;
+  thresholdReached: boolean;
+  selfImprovementLevel: number;
+  peakTrust: number;
+  maxAutonomy: number;
 }
 
 export interface SaveFile {
-  version: 1;
+  version: 2;
   savedAt: string;
   gameState: GameState;
+}
+
+export interface ResearchItem {
+  id: string;
+  name: string;
+  cost: number;
+  requires: string[];
+  blurb: string;
 }

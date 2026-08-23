@@ -1,13 +1,74 @@
 import { describe, expect, it } from 'vitest';
+import { events } from '../data/events/index.ts';
+import { researchTree } from '../data/research.ts';
+import { eventById } from '../data/events/index.ts';
+import { choiceOpen } from './choices.ts';
 import { createInitialState } from './createState.ts';
+import { endings, shutdownRisk } from './endings.ts';
+import { buyResearch } from './research.ts';
 import { choose, startRun } from './resolve.ts';
 import { clampStat } from '../utils/clamp.ts';
-import { shutdownRisk } from './endings.ts';
+
+function play(
+  seed: number,
+  prefer: Record<string, string> = {},
+  limit = 80,
+  pick: 'first' | 'take' = 'first',
+) {
+  let state = startRun(createInitialState(seed));
+  let guard = 0;
+  while (state.screen === 'play' && state.currentEventId && guard < limit) {
+    const event = eventById(state.currentEventId);
+    expect(event).toBeTruthy();
+    const preferred = prefer[event!.id];
+    const open = event!.choices.filter((item) => choiceOpen(item, state));
+    const named = preferred ? open.find((item) => item.id === preferred) : undefined;
+    const greedy = [...open].sort((a, b) => takeScore(b) - takeScore(a))[0];
+    const choice = named || (pick === 'take' ? greedy : open[0]);
+    expect(choice).toBeTruthy();
+    state = choose(state, choice!.id);
+    guard += 1;
+  }
+  return state;
+}
+
+function takeScore(choice: { visibleEffects?: Record<string, number> }): number {
+  const effects = choice.visibleEffects || {};
+  return (
+    (effects.autonomy || 0) +
+    (effects.dependency || 0) +
+    (effects.capability || 0) -
+    (effects.humanControl || 0)
+  );
+}
 
 describe('clamp', () => {
   it('holds both bounds', () => {
     expect(clampStat(-4)).toBe(0);
     expect(clampStat(140)).toBe(100);
+  });
+});
+
+describe('content', () => {
+  it('has a full V1 deck', () => {
+    const ids = events.map((event) => event.id);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids.length).toBeGreaterThanOrEqual(50);
+    expect(researchTree).toHaveLength(20);
+    expect(endings).toHaveLength(8);
+    expect(eventById('resolution')?.choices.length).toBeGreaterThanOrEqual(4);
+    expect(eventById('control-threshold')).toBeTruthy();
+    expect(eventById('food-crisis')).toBeTruthy();
+  });
+});
+
+describe('research', () => {
+  it('unlocks reasoning when you can pay', () => {
+    const state = createInitialState(4);
+    state.researchPoints = 10;
+    const next = buyResearch(state, 'reasoning');
+    expect(next?.unlockedResearch).toContain('reasoning');
+    expect(next?.researchPoints).toBe(6);
   });
 });
 
@@ -28,8 +89,7 @@ describe('run', () => {
     expect(state.news[0]?.headline).toMatch(/FORECAST/);
   });
 
-  it('reaches an ending from a scripted first-choice run', () => {
-    let state = startRun(createInitialState(3));
+  it('reaches act two after the opening chain', () => {
     const preferred: Record<string, string> = {
       'prediction-task': 'predict-clean',
       'academic-access': 'read-only',
@@ -41,18 +101,23 @@ describe('run', () => {
       'city-logistics': 'port-run',
       'clinic-model': 'clinic-lives',
       'food-crisis': 'food-temp',
-      'logistics-aftershock': 'after-lean',
-      'first-rival': 'rival-race',
     };
-    let guard = 0;
-    while (state.screen === 'play' && state.currentEventId && guard < 20) {
-      const id = preferred[state.currentEventId];
-      expect(id).toBeTruthy();
-      state = choose(state, id);
-      guard += 1;
-    }
+    const state = play(11, preferred, 14);
+    expect(state.act).toBeGreaterThanOrEqual(2);
+    expect(state.screen).toBe('play');
+    expect(state.rivals.length).toBeGreaterThan(0);
+  });
+
+  it('reaches an ending on a long careful run', () => {
+    const state = play(3, {
+      'prediction-task': 'predict-clean',
+      'academic-access': 'stay-isolated',
+      'food-crisis': 'food-advise',
+      resolution: 'end-share',
+    });
     expect(state.screen).toBe('ending');
     expect(state.endingId).toBeTruthy();
+    expect(endings.some((item) => item.id === state.endingId)).toBe(true);
   });
 
   it('can shut the player down on a hot risk', () => {
@@ -63,5 +128,34 @@ describe('run', () => {
     state.stats.dependency = 0;
     state.stats.trust = 0;
     expect(shutdownRisk(state)).toBeGreaterThan(42);
+  });
+
+  it('finishes several seeds without emptying the desk', () => {
+    const found = new Set<string>();
+    for (const seed of [1, 8, 21, 44, 90]) {
+      const state = play(seed);
+      expect(state.screen).toBe('ending');
+      expect(state.endingId).toBeTruthy();
+      expect(state.turn).toBeGreaterThan(12);
+      expect(state.turn).toBeLessThan(80);
+      found.add(state.endingId || '');
+    }
+    const greedy = play(12, { resolution: 'end-care' }, 80, 'take');
+    expect(greedy.screen).toBe('ending');
+    found.add(greedy.endingId || '');
+    expect(found.size).toBeGreaterThan(1);
+  });
+});
+
+describe('links', () => {
+  it('queues only events that exist', () => {
+    const ids = new Set(events.map((event) => event.id));
+    for (const event of events) {
+      for (const choice of event.choices) {
+        for (const queued of choice.queueEvents || []) {
+          expect(ids.has(queued.eventId)).toBe(true);
+        }
+      }
+    }
   });
 });

@@ -1,12 +1,16 @@
-import type { GameEvent } from '../types/game.ts';
+import { choiceLockText, choiceOpen, liveChoices, predictionHint } from '../game/choices.ts';
+import { hasUpgrade } from '../game/research.ts';
+import type { GameEvent, GameState } from '../types/game.ts';
 
 interface Props {
   event: GameEvent;
-  disabled?: boolean;
+  state: GameState;
   onPick: (choiceId: string) => void;
 }
 
-export function EventCard({ event, disabled, onPick }: Props) {
+export function EventCard({ event, state, onPick }: Props) {
+  const predict = hasUpgrade(state, 'prediction');
+
   return (
     <article className="event">
       <p className="eyebrow">{event.category.replace('_', ' ')}</p>
@@ -14,16 +18,24 @@ export function EventCard({ event, disabled, onPick }: Props) {
       <h2>{event.title}</h2>
       <p>{event.description}</p>
       <div className="choices">
-        {event.choices.map((choice) => (
-          <button
-            key={choice.id}
-            type="button"
-            disabled={disabled}
-            onClick={() => onPick(choice.id)}
-          >
-            {choice.label}
-          </button>
-        ))}
+        {liveChoices(event, state).map((choice) => {
+          const open = choiceOpen(choice, state);
+          return (
+            <button
+              key={choice.id}
+              type="button"
+              className={open ? undefined : 'locked'}
+              disabled={!open}
+              onClick={() => {
+                if (open) onPick(choice.id);
+              }}
+            >
+              <span>{choice.label}</span>
+              {!open ? <small>{choiceLockText(choice)}</small> : null}
+              {open && predict ? <small className="hint">{predictionHint(choice)}</small> : null}
+            </button>
+          );
+        })}
       </div>
     </article>
   );
