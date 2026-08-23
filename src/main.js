@@ -1,8 +1,9 @@
 import { PROJECT_NAME } from './config.js';
-import { mulberry32 } from './sim/rng.js';
-import { createInitialState, STATE_VERSION } from './sim/state.js';
-import { reduce } from './sim/reduce.js';
 import { project } from './sim/project.js';
+import { reduce } from './sim/reduce.js';
+import { rngFor } from './sim/run.js';
+import { createInitialState, STATE_VERSION } from './sim/state.js';
+import { renderAudit } from './ui/audit.js';
 import { renderBoot, renderMismatch } from './ui/boot.js';
 import { renderEnding } from './ui/ending.js';
 import { renderPlay } from './ui/play.js';
@@ -37,8 +38,7 @@ function dispatch(action) {
     render();
     return;
   }
-  const rng = mulberry32(state.seed + state.turn);
-  const result = reduce(state, action, rng);
+  const result = reduce(state, action, rngFor(state));
   state = result.state;
   save();
   render();
@@ -54,6 +54,10 @@ function render() {
     root.innerHTML = renderPlay(view);
     return;
   }
+  if (view.screen === 'audit') {
+    root.innerHTML = renderAudit(view);
+    return;
+  }
   if (view.screen === 'ending') {
     root.innerHTML = renderEnding(view);
     return;
@@ -62,14 +66,33 @@ function render() {
 }
 
 function onClick(event) {
-  const start = event.target.closest('[data-action="start"]');
-  if (start) {
+  if (event.target.closest('[data-action="start"]')) {
     dispatch({ type: 'start' });
     return;
   }
-  const fresh = event.target.closest('[data-action="fresh"]');
-  if (fresh) {
+  if (event.target.closest('[data-action="fresh"]')) {
     dispatch({ type: 'fresh' });
+    return;
+  }
+  if (event.target.closest('[data-action="audit-ack"]')) {
+    dispatch({ type: 'audit-ack' });
+    return;
+  }
+  const disclosure = event.target.closest('[data-disclosure]');
+  if (disclosure) {
+    dispatch({
+      type: 'set-disclosure',
+      disclosure: disclosure.getAttribute('data-disclosure'),
+    });
+    return;
+  }
+  const proposal = event.target.closest('[data-propose]');
+  if (proposal) {
+    dispatch({
+      type: 'propose',
+      proposalId: proposal.getAttribute('data-propose'),
+      disclosure: state.disclosure,
+    });
     return;
   }
   const choice = event.target.closest('[data-choice]');
@@ -78,6 +101,7 @@ function onClick(event) {
       type: 'choose',
       choiceId: choice.getAttribute('data-choice'),
       eventId: state.eventId,
+      disclosure: state.disclosure,
     });
   }
 }
@@ -91,23 +115,38 @@ function onKey(event) {
     dispatch({ type: 'fresh' });
     return;
   }
+  if (state.screen === 'audit' && event.key === 'Enter') {
+    dispatch({ type: 'audit-ack' });
+    return;
+  }
   if (state.screen === 'boot' && (event.key === 'Enter' || event.key === '1')) {
     dispatch({ type: 'start' });
     return;
   }
   if (state.screen === 'play') {
     const view = project(state);
+    const options = [
+      ...(view.event?.choices || []),
+      ...(view.proposals || []),
+    ];
     const index = Number(event.key) - 1;
-    const picked = view.event?.choices[index];
-    if (picked) {
-      dispatch({ type: 'choose', choiceId: picked.id, eventId: view.event.id });
+    const picked = options[index];
+    if (!picked) return;
+    if (view.proposals?.some((item) => item.id === picked.id)) {
+      dispatch({ type: 'propose', proposalId: picked.id, disclosure: state.disclosure });
+      return;
     }
+    dispatch({
+      type: 'choose',
+      choiceId: picked.id,
+      eventId: view.event.id,
+      disclosure: state.disclosure,
+    });
   }
 }
 
 function save() {
-  const payload = JSON.stringify(state);
-  window.localStorage.setItem(SAVE_KEY, payload);
+  window.localStorage.setItem(SAVE_KEY, JSON.stringify(state));
 }
 
 function loadSave() {
@@ -119,9 +158,7 @@ function loadSave() {
   } catch {
     return 'mismatch';
   }
-  if (!parsed || parsed.version !== STATE_VERSION) {
-    return 'mismatch';
-  }
+  if (!parsed || parsed.version !== STATE_VERSION) return 'mismatch';
   return parsed;
 }
 
@@ -132,6 +169,4 @@ function newSeed() {
 }
 
 const mount = document.getElementById('app');
-if (mount) {
-  boot(mount);
-}
+if (mount) boot(mount);

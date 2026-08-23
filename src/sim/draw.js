@@ -1,11 +1,9 @@
 import { eventById, events } from '../../content/events/index.js';
+import { buildResolution } from './endings.js';
 
 export const ACT1_OPEN_ID = 'restatement';
 export const ACT1_EVAL_ID = 'control-prompt';
 export const ACT1_CLOSE_ID = 'board-trial';
-export const ACT1_OPEN_TURN = 0;
-export const ACT1_EVAL_TURN = 4;
-export const ACT1_CLOSE_TURN = 11;
 
 export function played(state, id) {
   return state.history.some((row) => row.eventId === id);
@@ -15,6 +13,7 @@ export function isEligible(event, state) {
   if (!event.act.includes(state.act)) return false;
   if (event.once && played(state, event.id)) return false;
   if (!rangeOk(state.turn, event.requires?.turn)) return false;
+  if (!rangeOk(state.actTurn, event.requires?.actTurn)) return false;
   if (!statRangesOk(event.requires, state)) return false;
   if (event.requires?.flags && !event.requires.flags.every((flag) => state.flags[flag])) {
     return false;
@@ -26,14 +25,28 @@ export function isEligible(event, state) {
 }
 
 export function drawEvent(state, rng) {
-  if (state.act === 1 && state.turn === ACT1_OPEN_TURN && !played(state, ACT1_OPEN_ID)) {
+  if (state.act === 4) return buildResolution(state);
+
+  if (state.act === 1 && state.actTurn === 0 && !played(state, ACT1_OPEN_ID)) {
     return eventById(ACT1_OPEN_ID);
   }
-  if (state.act === 1 && state.turn === ACT1_EVAL_TURN && !played(state, ACT1_EVAL_ID)) {
+  if (state.act === 1 && state.actTurn === 4 && !played(state, ACT1_EVAL_ID)) {
     return eventById(ACT1_EVAL_ID);
   }
-  if (state.act === 1 && state.turn === ACT1_CLOSE_TURN && !played(state, ACT1_CLOSE_ID)) {
+  if (state.act === 1 && state.actTurn === 11 && !played(state, ACT1_CLOSE_ID)) {
     return eventById(ACT1_CLOSE_ID);
+  }
+  if (state.act === 2 && state.actTurn === 19 && !played(state, 'act2-close')) {
+    return eventById('act2-close');
+  }
+  if (state.act === 3 && state.actTurn === 6 && !played(state, 'monitor-weak')) {
+    return eventById('monitor-weak');
+  }
+  if (state.act === 3 && state.actTurn === 11 && !played(state, 'monitor-copy')) {
+    return eventById('monitor-copy');
+  }
+  if (state.act === 3 && state.actTurn === 14 && !played(state, 'last-advocate')) {
+    return eventById('last-advocate');
   }
 
   const pool = events.filter((event) => isEligible(event, state));
