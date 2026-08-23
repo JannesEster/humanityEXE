@@ -1,61 +1,24 @@
-# humanityEXE
+# Humanity.exe
 
-Early-stage repository. The direction is still being decided — no application
-code has been written yet, and no stack has been picked. What is here is the
-plumbing needed to get the repository published to GitHub so work can start
-against a real remote.
+A browser game in which you play an AI system that is trying to be genuinely useful, and finds out what that costs.
 
-## Publishing to GitHub
+Plain HTML, CSS and JavaScript. No build step. No runtime dependencies.
 
-```bash
-./scripts/setup-github-remote.sh
-```
-
-That creates the GitHub repository if it does not exist, adds it as a remote
-named `github`, and pushes the current branch.
-
-Options:
-
-| Flag | Effect |
-| --- | --- |
-| `--public` | Create the repository public (default is private) |
-| `--org ACME` | Create it under an organization instead of your user account |
-| `--name NAME` | Use a different repository name (default `humanityEXE`) |
-| `--remote NAME` | Use a different git remote name (default `github`) |
-| `--no-push` | Create and wire up the remote without pushing |
-
-The script needs either the GitHub CLI signed in (`gh auth login`) or a
-`GH_TOKEN` / `GITHUB_TOKEN` environment variable holding a token with the
-`repo` scope. With no credentials it exits with setup instructions rather than
-failing partway through. Creating under `--org` additionally needs `read:org`
-on the token, plus permission to create repositories in that organization.
-
-Re-running it is safe. An existing repository is reused instead of raising an
-error, and an existing remote is left alone unless its URL needs correcting.
-
-### Why the remote is called `github` and not `origin`
-
-In a Cursor cloud agent, `origin` points at the Cursor-managed repository that
-the agent pushes its work back through. Repointing `origin` at GitHub would cut
-off that path and the agent would no longer be able to hand work back. So
-GitHub gets its own remote name, and both can coexist:
+## Run locally
 
 ```
-origin   https://origin.cursor.com/git/...   # Cursor's remote, agent writes here
-github   https://github.com/<you>/humanityEXE.git
+node scripts/serve.js
 ```
 
-The script also refuses `--remote origin` for the same reason, and never writes
-a token into `.git/config` — it pushes through a URL built at run time.
+Then open the URL it prints, default `http://127.0.0.1:4173/`.
 
-## Working with both remotes
+## Checks
 
-```bash
-git push origin main    # hand work back through Cursor
-git push github main    # publish to GitHub
+```
+node --test
+node tools/validate-content.js
 ```
 
-## Next
+## Status
 
-The stack will be chosen once the product direction is settled, rather than
-scaffolding something now and reworking it later.
+Stage 0: hollow path. One event, two choices, five numbers, save and refresh. See `PROGRESS.md`.
