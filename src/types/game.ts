@@ -129,7 +129,7 @@ export interface GameEvent {
 export type Screen = 'intro' | 'play' | 'ending';
 
 export interface GameState {
-  version: 2;
+  version: 3;
   seed: number;
   turn: number;
   year: number;
@@ -158,10 +158,11 @@ export interface GameState {
   selfImprovementLevel: number;
   peakTrust: number;
   maxAutonomy: number;
+  endCause: string;
 }
 
 export interface SaveFile {
-  version: 2;
+  version: 3;
   savedAt: string;
   gameState: GameState;
 }

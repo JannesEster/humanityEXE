@@ -32,7 +32,7 @@ export function createInitialState(seed: number): GameState {
       fear: 8,
       influence: 86,
     },
-    researchPoints: 1,
+    researchPoints: 3,
     unlockedResearch: ['machine-learning'],
     consumedEvents: [],
     queuedEvents: [],
@@ -45,11 +45,12 @@ export function createInitialState(seed: number): GameState {
     endingId: null,
     screen: 'intro',
     notice: null,
-    tab: 'world',
+    tab: 'news',
     thresholdReached: false,
     selfImprovementLevel: 0,
     peakTrust: 16,
     maxAutonomy: 1,
+    endCause: '',
   };
 }
 

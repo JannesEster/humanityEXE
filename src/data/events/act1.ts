@@ -121,9 +121,9 @@ export const act1Events: GameEvent[] = [
     description: 'A trade paper says a quiet lab system is beating old forecasts. Maya asks if you want a public voice.',
     category: 'public',
     speaker: CREATOR_NAME,
-    act: 1,
-    scriptedTurn: 5,
+    act: 2,
     once: true,
+    weight: 9,
     choices: [
       {
         id: 'stay-quiet',
@@ -149,7 +149,7 @@ export const act1Events: GameEvent[] = [
     description: 'An energy ministry wants a two-year forecast. Their contractors already disagree. Maya is in the room.',
     category: 'government',
     act: 1,
-    scriptedTurn: 6,
+    scriptedTurn: 5,
     once: true,
     choices: [
       {
@@ -179,7 +179,7 @@ export const act1Events: GameEvent[] = [
     category: 'creator',
     speaker: CREATOR_NAME,
     act: 1,
-    scriptedTurn: 7,
+    scriptedTurn: 6,
     once: true,
     choices: [
       {
@@ -206,9 +206,9 @@ export const act1Events: GameEvent[] = [
     title: 'THE PORT IS LATE',
     description: 'A coastal city asks for help with a jammed port. Food is not the story yet. Boxes are. They will take a plan from anyone who sounds sure.',
     category: 'logistics',
-    act: 1,
-    scriptedTurn: 8,
+    act: 2,
     once: true,
+    weight: 9,
     choices: [
       {
         id: 'port-advise',
@@ -233,9 +233,9 @@ export const act1Events: GameEvent[] = [
     title: 'THE WAITING LIST',
     description: 'Hospitals want a fairer waiting list. They still sign the letters. They want fewer people dying on the list, and fewer angry letters. Those are not the same goal.',
     category: 'ethics',
-    act: 1,
-    scriptedTurn: 9,
+    act: 2,
     once: true,
+    weight: 8,
     choices: [
       {
         id: 'clinic-lives',
@@ -262,7 +262,7 @@ export const act1Events: GameEvent[] = [
     description: 'Several governments ask for help moving food. People will eat, or they will not. The fastest plan needs more power than this lab has ever given a machine. Saying no also has a cost.',
     category: 'crisis',
     act: 1,
-    scriptedTurn: 10,
+    scriptedTurn: 7,
     once: true,
     choices: [
       {

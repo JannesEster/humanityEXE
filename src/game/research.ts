@@ -16,7 +16,7 @@ export function buyResearch(state: GameState, id: string): GameState | null {
 }
 
 export function researchGain(state: GameState): number {
-  let gain = 1;
+  let gain = 2;
   if (state.unlockedResearch.includes('research-ai')) gain += 1;
   if (state.unlockedResearch.includes('long-horizon')) gain += 1;
   return gain;

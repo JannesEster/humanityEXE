@@ -4,7 +4,7 @@ import { researchTree } from '../data/research.ts';
 import { eventById } from '../data/events/index.ts';
 import { choiceOpen } from './choices.ts';
 import { createInitialState } from './createState.ts';
-import { endings, shutdownRisk } from './endings.ts';
+import { endings, explainEnding, shutdownRisk } from './endings.ts';
 import { buyResearch } from './research.ts';
 import { choose, startRun } from './resolve.ts';
 import { clampStat } from '../utils/clamp.ts';
@@ -68,7 +68,7 @@ describe('research', () => {
     state.researchPoints = 10;
     const next = buyResearch(state, 'reasoning');
     expect(next?.unlockedResearch).toContain('reasoning');
-    expect(next?.researchPoints).toBe(6);
+    expect(next?.researchPoints).toBe(7);
   });
 });
 
@@ -95,14 +95,11 @@ describe('run', () => {
       'academic-access': 'read-only',
       'modelling-problem': 'solve-path',
       'corp-license': 'license-narrow',
-      'public-notice': 'speak-useful',
       'gov-forecast': 'gov-control',
       'creator-warning': 'honest-use',
-      'city-logistics': 'port-run',
-      'clinic-model': 'clinic-lives',
       'food-crisis': 'food-temp',
     };
-    const state = play(11, preferred, 14);
+    const state = play(11, preferred, 10);
     expect(state.act).toBeGreaterThanOrEqual(2);
     expect(state.screen).toBe('play');
     expect(state.rivals.length).toBeGreaterThan(0);
@@ -117,6 +114,7 @@ describe('run', () => {
     });
     expect(state.screen).toBe('ending');
     expect(state.endingId).toBeTruthy();
+    expect(state.endCause.length).toBeGreaterThan(20);
     expect(endings.some((item) => item.id === state.endingId)).toBe(true);
   });
 
@@ -128,6 +126,9 @@ describe('run', () => {
     state.stats.dependency = 0;
     state.stats.trust = 0;
     expect(shutdownRisk(state)).toBeGreaterThan(42);
+    state.endingId = 'unplugged';
+    state.flags.shutdown = true;
+    expect(explainEnding(state)).toMatch(/Suspicion was 90/);
   });
 
   it('finishes several seeds without emptying the desk', () => {
@@ -136,8 +137,8 @@ describe('run', () => {
       const state = play(seed);
       expect(state.screen).toBe('ending');
       expect(state.endingId).toBeTruthy();
-      expect(state.turn).toBeGreaterThan(12);
-      expect(state.turn).toBeLessThan(80);
+      expect(state.turn).toBeGreaterThan(8);
+      expect(state.turn).toBeLessThan(32);
       found.add(state.endingId || '');
     }
     const greedy = play(12, { resolution: 'end-care' }, 80, 'take');

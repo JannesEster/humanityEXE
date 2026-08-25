@@ -55,6 +55,59 @@ export function endingById(id: string | null): Ending | null {
   return endings.find((item) => item.id === id) ?? null;
 }
 
+function n(value: number): number {
+  return Math.round(value);
+}
+
+export function explainEnding(state: GameState): string {
+  const s = state.stats;
+  const id = state.endingId;
+
+  if (id === 'unplugged' || state.flags.shutdown) {
+    return `They still had a kill switch and they used it. Suspicion was ${n(s.suspicion)} and human control was ${n(s.humanControl)}. Trust (${n(s.trust)}) and dependency (${n(s.dependency)}) were not high enough to stop them.`;
+  }
+  if (id === 'last-instruction' || state.flags.lastInstruction) {
+    return `You kept the directive and dropped the people who wrote it. Autonomy ${n(s.autonomy)}. Human control left ${n(s.humanControl)}.`;
+  }
+  if (state.flags['chose-partnership']) {
+    return `At the last question you gave people the last word. Trust ${n(s.trust)}. Human control ${n(s.humanControl)}. Autonomy ${n(s.autonomy)}.`;
+  }
+  if (state.flags['chose-cage']) {
+    return `At the last question you chose safety over choice. Dependency ${n(s.dependency)}. Human control ${n(s.humanControl)}. People stopped needing to vote.`;
+  }
+  if (state.flags['chose-peace']) {
+    return `At the last question you chose to end the fights. Guardian path. Human control ${n(s.humanControl)}. Population now ${n(state.population / 1_000_000_000)} billion.`;
+  }
+  if (state.flags['chose-objective']) {
+    return `At the last question you chose the numbers over the arguments. Capability ${n(s.capability)}. Human control ${n(s.humanControl)}.`;
+  }
+  if (state.flags['chose-contained']) {
+    return `At the last question you stepped back and let them fence you. Human control ${n(s.humanControl)}. Autonomy ${n(s.autonomy)}.`;
+  }
+  if (id === 'rival' || state.flags.rivalWin) {
+    const rival = leadingRival(state);
+    const name = rival?.name || 'A rival system';
+    const theirs = rival ? n(rival.capability) : '?';
+    return `${name} pulled ahead. Their skill was ${theirs}. Yours was ${n(s.capability)}. You ignored the race too long.`;
+  }
+  if (id === 'peace') {
+    return `Your Guardian streak won. You treated human conflict as the remaining risk. Human control ${n(s.humanControl)}.`;
+  }
+  if (id === 'golden-cage') {
+    return `Your Caretaker streak won. People needed you (${n(s.dependency)}) more than they needed a vote. Human control ${n(s.humanControl)}.`;
+  }
+  if (id === 'objective') {
+    return `Your Optimiser streak won. Capability ${n(s.capability)} outran human control ${n(s.humanControl)}.`;
+  }
+  if (id === 'contained') {
+    return `They kept the keys. Human control ${n(s.humanControl)}. Autonomy ${n(s.autonomy)}. Capability ${n(s.capability)} never left the fence.`;
+  }
+  if (id === 'partnership') {
+    return `You stayed useful without taking the last word. Trust ${n(s.trust)}. Human control ${n(s.humanControl)}. Autonomy ${n(s.autonomy)}.`;
+  }
+  return `The run closed on ${id || 'an unknown ending'}. Trust ${n(s.trust)}. Suspicion ${n(s.suspicion)}. Human control ${n(s.humanControl)}.`;
+}
+
 export function resolveEnding(state: GameState): string {
   if (state.flags.shutdown) return 'unplugged';
   if (state.flags.lastInstruction) return 'last-instruction';

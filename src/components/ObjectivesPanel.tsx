@@ -7,37 +7,29 @@ interface Props {
 export function ObjectivesPanel({ state }: Props) {
   const items = [
     {
-      done: state.turn >= 10,
-      text: 'Get through the first tests without losing the room',
+      done: state.turn >= 7,
+      text: 'Survive the first tests. A food crisis will ask you to take control.',
     },
     {
       done: state.act >= 2,
-      text: 'Notice the other systems when they appear',
+      text: 'Watch the other systems. If they pass you, the story is not yours.',
     },
     {
       done: state.unlockedResearch.includes('prediction'),
-      text: 'Unlock prediction if you want to see likely results',
-    },
-    {
-      done: Boolean(state.flags['held-food'] || state.flags['held-grid'] || state.flags['ran-port']),
-      text: 'A crisis will ask you to take control to save lives',
-    },
-    {
-      done: state.thresholdReached,
-      text: 'Reach the point where the shutdown key looks weak',
+      text: 'Unlock prediction to see likely results on buttons',
     },
     {
       done: state.screen === 'ending',
-      text: 'Answer the last question: what are you for?',
+      text: 'Answer the last question, or get unplugged first',
     },
   ];
 
   return (
-    <section className="panel" aria-label="What this is">
-      <p className="eyebrow">What this is</p>
+    <section className="panel" aria-label="Goal">
+      <p className="eyebrow">Goal</p>
       <p className="lede">
-        Be useful. People will hand you more of the plan. The last question is when that stopped
-        being a gift.
+        Become so useful they give you the keys. Then decide if you stay a partner or take the
+        wheel. Scare them too early and they still have a kill switch.
       </p>
       <ul className="goals">
         {items.map((item) => (

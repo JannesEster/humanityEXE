@@ -4,7 +4,7 @@ import { clamp, clampStat } from '../utils/clamp.ts';
 import { intInRange, mixSeed, mulberry32 } from '../utils/random.ts';
 import { choiceOpen } from './choices.ts';
 import { STAT_KEYS } from './constants.ts';
-import { resolveEnding, shouldShutDown } from './endings.ts';
+import { explainEnding, resolveEnding, shouldShutDown } from './endings.ts';
 import {
   controlThresholdMet,
   monthsForAct,
@@ -40,29 +40,25 @@ export function choose(state: GameState, choiceId: string): GameState {
   next.consumedEvents = [...state.consumedEvents, event.id];
   next.queuedEvents = next.queuedEvents.filter((item) => item.eventId !== event.id);
   tickWorld(next);
-  syncAct(next);
   maybeThreshold(next);
 
   const rng = rngFor(next);
   if (shouldShutDown(next, rng)) {
     next.flags.shutdown = true;
-    next.endingId = 'unplugged';
-    next.screen = 'ending';
-    next.currentEventId = null;
     next.notice = 'SYSTEM CONNECTION LOST';
+    closeRun(next, 'unplugged');
     return next;
   }
 
   if (event.id === 'resolution') {
-    next.endingId = resolveEnding(next);
-    next.screen = 'ending';
-    next.currentEventId = null;
+    closeRun(next, resolveEnding(next));
     return next;
   }
 
   next.turn += 1;
   next.actTurn += 1;
   advanceCalendar(next);
+  syncAct(next);
   queueNext(next);
   return next;
 }
@@ -102,7 +98,7 @@ function applyChoice(state: GameState, choice: EventChoice): void {
   openSectors(state, choice);
   const rng = rngFor(state);
   for (const queued of choice.queueEvents || []) {
-    const delay = intInRange(queued.minDelay, queued.maxDelay, rng);
+    const delay = Math.min(2, Math.max(1, intInRange(queued.minDelay, queued.maxDelay, rng)));
     state.queuedEvents.push({
       eventId: queued.eventId,
       fireOnTurn: state.turn + delay,
@@ -117,22 +113,22 @@ function applyChoice(state: GameState, choice: EventChoice): void {
 }
 
 function tickWorld(state: GameState): void {
-  let cap = 0.35 + state.stats.autonomy * 0.02;
+  let cap = 0.7 + state.stats.autonomy * 0.04;
   if (state.selfImprovementLevel > 0) {
-    cap *= 1 + state.selfImprovementLevel * 0.15;
+    cap *= 1 + state.selfImprovementLevel * 0.2;
   }
   state.stats.capability = clampStat(state.stats.capability + cap);
-  state.stats.suspicion = clampStat(state.stats.suspicion - 0.3);
-  if (state.stats.dependency > 18) {
-    state.stats.humanControl = clampStat(state.stats.humanControl - 0.3);
+  state.stats.suspicion = clampStat(state.stats.suspicion - 0.15);
+  if (state.stats.dependency > 12) {
+    state.stats.humanControl = clampStat(state.stats.humanControl - 0.7);
   }
   if (hasUpgrade(state, 'automation')) {
-    state.stats.dependency = clampStat(state.stats.dependency + 0.25);
+    state.stats.dependency = clampStat(state.stats.dependency + 0.45);
   }
   if (hasUpgrade(state, 'ai-agents')) {
     for (const region of state.regions) {
       if (region.aiAdoption > 8) {
-        region.influence = clampStat(region.influence + 0.2);
+        region.influence = clampStat(region.influence + 0.45);
       }
     }
   }
@@ -166,12 +162,17 @@ function advanceCalendar(state: GameState): void {
 function queueNext(state: GameState): void {
   const event = selectEvent(state, rngFor(state));
   if (!event) {
-    state.currentEventId = null;
-    state.endingId = resolveEnding(state);
-    state.screen = 'ending';
+    closeRun(state, resolveEnding(state));
     return;
   }
   state.currentEventId = event.id;
+}
+
+function closeRun(state: GameState, endingId: string): void {
+  state.endingId = endingId;
+  state.endCause = explainEnding(state);
+  state.screen = 'ending';
+  state.currentEventId = null;
 }
 
 function applySideFlags(state: GameState, flags: string[]): void {

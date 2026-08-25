@@ -182,3 +182,14 @@ decision: A run is forced toward Act IV by turn 46, or after fourteen Act III ca
 alternatives: Let careful runs idle forever in filler cards. End the moment the event pool thins.
 why: Version 1 has to finish. The last card is the product, not an empty desk.
 
+date: 2026-08-25
+decision: Punchy V1: 12-18 minute runs, a loud opening goal, radar cyan/amber UI, and a schematic world map always on the desk.
+alternatives: Keep the long filler run. Keep the black flat UI. Keep the map behind a tab.
+why: Owner said the start had no goal, endings had no cause, the pace crawled, and the map was dots in a box.
+
+date: 2026-08-25
+decision: Save key is aria.save.v3. End screens store a plain-English endCause naming the stats that closed the run.
+alternatives: Keep v2 and patch in a why line. Let players infer from the ending title.
+why: Act timing and the report shape changed. Old mid-runs would lie. The why line is the fix for "who knows why it ended."
+
+

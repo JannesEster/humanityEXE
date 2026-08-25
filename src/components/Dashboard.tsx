@@ -22,12 +22,11 @@ interface Props {
 }
 
 const TABS: { id: TabId; label: string }[] = [
-  { id: 'world', label: 'World' },
   { id: 'news', label: 'News' },
   { id: 'research', label: 'Research' },
   { id: 'network', label: 'Network' },
   { id: 'governments', label: 'Places' },
-  { id: 'objectives', label: 'Goals' },
+  { id: 'objectives', label: 'Goal' },
 ];
 
 const ACT = ['', 'I', 'II', 'III', 'IV'];
@@ -40,15 +39,14 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
     <div className="shell">
       <header className="top">
         <div>
-          <p className="eyebrow">{SYSTEM_NAME} system</p>
-          <p className="directive">Primary directive: {DIRECTIVE}</p>
+          <p className="eyebrow">{SYSTEM_NAME} online</p>
+          <p className="directive">Goal: get the keys. Stay a partner if you can.</p>
           <p className="directive">
-            Act {ACT[state.act] || state.act} · {calendarLabel(state)}
+            {DIRECTIVE} · Act {ACT[state.act] || state.act} · {calendarLabel(state)}
           </p>
         </div>
         <div className="top-right">
           <p>Year {state.year}</p>
-          <p>Status online</p>
           <p>{state.researchPoints} research</p>
           <button type="button" className="textish" onClick={onReset}>
             New game
@@ -60,7 +58,20 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
       <p className="voice">{voiceLine(state)}</p>
       {state.news[0] ? <p className="ticker">{state.news[0].headline}</p> : null}
 
-      <div className="grid">
+      <div className="vitals">
+        <p className="pop">Population {formatPopulation(state.population)}</p>
+        <div className="vital-grid">
+          <StatBar label="Trust" value={stats.trust} tone="trust" />
+          <StatBar label="Dependency" value={stats.dependency} tone="dependency" />
+          <StatBar label="Autonomy" value={stats.autonomy} tone="autonomy" />
+          <StatBar label="Suspicion" value={stats.suspicion} tone="suspicion" />
+          <StatBar label="Capability" value={stats.capability} tone="capability" />
+          <StatBar label="Human control" value={stats.humanControl} tone="control" />
+        </div>
+      </div>
+
+      <div className="stage">
+        <WorldMap regions={state.regions} />
         {event ? (
           <EventCard
             event={event}
@@ -73,15 +84,6 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
         ) : (
           <p className="muted">No event queued.</p>
         )}
-        <aside className="vitals">
-          <p className="pop">Human population {formatPopulation(state.population)}</p>
-          <StatBar label="Trust" value={stats.trust} />
-          <StatBar label="Dependency" value={stats.dependency} />
-          <StatBar label="Autonomy" value={stats.autonomy} />
-          <StatBar label="Suspicion" value={stats.suspicion} />
-          <StatBar label="Capability" value={stats.capability} />
-          <StatBar label="Human control" value={stats.humanControl} />
-        </aside>
       </div>
 
       <nav className="tabs" aria-label="Desk">
@@ -97,7 +99,6 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
         ))}
       </nav>
 
-      {state.tab === 'world' ? <WorldMap regions={state.regions} /> : null}
       {state.tab === 'news' ? <NewsFeed items={state.news} /> : null}
       {state.tab === 'research' ? <ResearchPanel state={state} onBuy={onBuy} /> : null}
       {state.tab === 'network' ? <NetworkPanel state={state} /> : null}

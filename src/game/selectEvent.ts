@@ -31,7 +31,7 @@ export function isEligible(event: GameEvent, state: GameState): boolean {
 }
 
 export function selectEvent(state: GameState, rng: () => number): GameEvent | null {
-  if (state.act === 4 && state.actTurn >= 2 && !state.consumedEvents.includes('resolution')) {
+  if (state.act === 4 && state.actTurn >= 1 && !state.consumedEvents.includes('resolution')) {
     const resolution = eventById('resolution');
     if (resolution && isEligible(resolution, state)) return resolution;
   }

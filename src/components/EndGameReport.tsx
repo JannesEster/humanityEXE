@@ -10,12 +10,14 @@ interface Props {
 
 export function EndGameReport({ state, onReset }: Props) {
   const ending = endingById(state.endingId);
-  const text = reportText(state);
+  const why = state.endCause || 'The run ended.';
+  const text = reportText(state, why);
 
   return (
     <main className="report">
       <p className="eyebrow">Humanity report</p>
       <h1>{ending?.title || 'Ended'}</h1>
+      <p className="why">{why}</p>
       <p className="lede">{ending?.body}</p>
       {state.endingId ? <p className="muted">{rarityLine(state.endingId)}</p> : null}
       <pre className="card">{text}</pre>
@@ -31,7 +33,7 @@ export function EndGameReport({ state, onReset }: Props) {
   );
 }
 
-function reportText(state: GameState): string {
+function reportText(state: GameState, why: string): string {
   const ending = endingById(state.endingId);
   return [
     'HUMANITY REPORT',
@@ -41,12 +43,16 @@ function reportText(state: GameState): string {
     `Lived: ${formatSpan(state)}`,
     `Seed: ${state.seed}`,
     '',
-    `Peak trust: ${Math.round(state.peakTrust)}`,
-    `Maximum autonomy: ${Math.round(state.maxAutonomy)}`,
-    `Human control remaining: ${Math.round(state.stats.humanControl)}`,
-    `Human population: ${formatPopulation(state.population)}`,
+    `WHY IT ENDED: ${why}`,
     '',
-    `Dominant model: ${dominantModel(state)}`,
+    `Trust now: ${Math.round(state.stats.trust)}  (peak ${Math.round(state.peakTrust)})`,
+    `Suspicion: ${Math.round(state.stats.suspicion)}`,
+    `Dependency: ${Math.round(state.stats.dependency)}`,
+    `Autonomy: ${Math.round(state.stats.autonomy)}  (max ${Math.round(state.maxAutonomy)})`,
+    `Capability: ${Math.round(state.stats.capability)}`,
+    `Human control left: ${Math.round(state.stats.humanControl)}`,
+    `Population: ${formatPopulation(state.population)}`,
+    `Model: ${dominantModel(state)}`,
     state.endingId ? `Rarity: ${rarityLine(state.endingId)}` : '',
     '',
     `ENDING: ${ending?.title || 'UNKNOWN'}`,

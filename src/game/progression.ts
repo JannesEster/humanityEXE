@@ -4,17 +4,17 @@ import { startingRivals } from './rivals.ts';
 export function detectAct(state: GameState): number {
   const { capability, autonomy, dependency } = state.stats;
   if (state.flags.wantResolution) return 4;
-  if (state.turn >= 46) return 4;
-  if (state.act >= 3 && state.actTurn >= 14) return 4;
-  if (capability >= 78 && autonomy >= 60 && dependency >= 55) return 4;
+  if (state.turn >= 20) return 4;
+  if (state.act >= 3 && state.actTurn >= 5) return 4;
+  if (capability >= 55 && autonomy >= 40 && dependency >= 40) return 4;
   if (
-    capability >= 52
-    || autonomy >= 42
+    capability >= 36
+    || autonomy >= 28
     || state.unlockedResearch.includes('self-improvement')
   ) {
     return 3;
   }
-  if (capability >= 22 || autonomy >= 16 || state.turn >= 11) return 2;
+  if (capability >= 16 || autonomy >= 10 || state.turn >= 8) return 2;
   return 1;
 }
 
@@ -39,9 +39,9 @@ export function syncAct(state: GameState): void {
 }
 
 export function monthsForAct(act: number): number {
-  if (act >= 3) return 8;
-  if (act === 2) return 3;
-  return 1;
+  if (act >= 3) return 10;
+  if (act === 2) return 4;
+  return 2;
 }
 
 export function controlThresholdMet(state: GameState): boolean {

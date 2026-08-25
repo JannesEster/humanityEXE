@@ -2,37 +2,25 @@
 
 ## Current stage
 
-Prime Directive Version 1. Playable full run. Spec file wins if anything else disagrees.
+Prime Directive Version 1, punchy pass. Spec file wins if anything else disagrees.
 
 ## Checklist
 
-- [x] Pivot recorded. Spec file is the source of truth.
-- [x] Vite + React + TypeScript + Zustand
-- [x] Six global stats plus hidden Guardian / Optimiser / Caretaker
-- [x] Intro: "Hello? Can you understand me?"
-- [x] Dashboard, stat bars, event card, news, world map
-- [x] Tabs: World, News, Research, Network, Places, Goals
-- [x] Twenty research upgrades
-- [x] Three rival systems on the board
-- [x] Fifty-plus events in plain language
-- [x] Food-corridor beat where taking control saves lives
-- [x] Delayed follow-ups and news after choices
-- [x] Control threshold and eight endings
-- [x] Shutdown risk and Unplugged
-- [x] Local autosave (`aria.save.v2`)
-- [x] Humanity report with local rarity line
-- [x] Light Web Audio clicks
+- [x] Clear opening goal: get the keys, try to stay a partner
+- [x] Ending report names the cause and the stats
+- [x] Faster run: seven opening cards, no quiet filler, Act IV by turn 20
+- [x] DEFCON / radar look (cyan, amber, red)
+- [x] Always-on schematic world map
+- [x] Local autosave (`aria.save.v3`)
 - [ ] Phone play at 380px, verified in a browser
-- [ ] Live Pages confirmed after this V1 push
+- [ ] Live Pages confirmed after this punchy push
 
 ## Next up
 
-Hard-refresh the live URL after Pages finishes. Play one careful run and one greedy run. Tune only if a run dies early or never ends.
+Hard-refresh the live URL. Play one careful run and one greedy run. The end screen should say why.
 
 ## Open questions and blocked
 
-- Custom domain later. Costs money. Do not buy one.
-- Real global ending percentages. Spec says later, and private. V1 uses a local rarity line only.
-- A real audio pack versus the current beeps.
+- Custom domain later. Costs money.
+- Real global ending percentages. Still local flavour only.
 - Phone feel at 380px. Not verified in a browser this session.
-- Credits spent. Unverified unless someone pastes the Cursor dashboard.
