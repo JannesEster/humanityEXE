@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { createInitialState } from '../game/createState.ts';
 import { syncAct } from '../game/progression.ts';
+import { unlockBlock } from '../data/research.ts';
 import { buyResearch } from '../game/research.ts';
 import { choose, startRun } from '../game/resolve.ts';
 import { bootState, clearSave, newSeed, writeSave } from '../utils/persistence.ts';
@@ -27,7 +28,12 @@ export const useGameStore = create<GameStore>((set) => ({
   buy: (id) =>
     set((store) => {
       const next = buyResearch(store.state, id);
-      if (!next) return store;
+      if (!next) {
+        const why =
+          unlockBlock(id, store.state.unlockedResearch, store.state.researchPoints) ||
+          'Cannot unlock that yet.';
+        return { state: persist({ ...store.state, notice: why }) };
+      }
       syncAct(next);
       return { state: persist(next) };
     }),

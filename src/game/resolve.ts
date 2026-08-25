@@ -1,8 +1,8 @@
 import { eventById } from '../data/events/index.ts';
-import type { EventChoice, GameState, GlobalStats } from '../types/game.ts';
+import type { EventChoice, GameState } from '../types/game.ts';
 import { clamp, clampStat } from '../utils/clamp.ts';
 import { intInRange, mixSeed, mulberry32 } from '../utils/random.ts';
-import { choiceOpen } from './choices.ts';
+import { choiceOpen, mirrorLine } from './choices.ts';
 import { STAT_KEYS } from './constants.ts';
 import { explainEnding, resolveEnding, shouldShutDown } from './endings.ts';
 import {
@@ -11,6 +11,7 @@ import {
   pushNews,
   syncAct,
 } from './progression.ts';
+import { paintFromChoice } from './map.ts';
 import { hasUpgrade, researchGain } from './research.ts';
 import { leadingRival, tickRivals } from './rivals.ts';
 import { selectEvent } from './selectEvent.ts';
@@ -59,6 +60,7 @@ export function choose(state: GameState, choiceId: string): GameState {
   next.actTurn += 1;
   advanceCalendar(next);
   syncAct(next);
+  flushEchoes(next);
   queueNext(next);
   return next;
 }
@@ -107,7 +109,9 @@ function applyChoice(state: GameState, choice: EventChoice): void {
   for (const headline of choice.news || []) {
     pushNews(state, headline);
   }
-  nudgeRegions(state, effects, choice.regionId);
+  paintFromChoice(state, choice);
+  state.lastEcho = mirrorLine(choice);
+  queueEcho(state, choice);
   state.peakTrust = Math.max(state.peakTrust, state.stats.trust);
   state.maxAutonomy = Math.max(state.maxAutonomy, state.stats.autonomy);
 }
@@ -217,18 +221,23 @@ function openSectors(state: GameState, choice: EventChoice): void {
   if (flags.some((flag) => /bank|finance|market/.test(flag))) state.sectors.finance = true;
 }
 
-function nudgeRegions(state: GameState, effects: Partial<GlobalStats>, regionId?: string): void {
-  const trust = effects.trust || 0;
-  const dependency = effects.dependency || 0;
-  if (!trust && !dependency) return;
-  const target = regionId
-    ? state.regions.find((item) => item.id === regionId)
-    : state.regions[state.turn % state.regions.length];
-  if (!target) return;
-  target.trust = clampStat(target.trust + trust * 0.45);
-  target.dependency = clampStat(target.dependency + dependency * 0.5);
-  target.influence = clampStat(target.influence + Math.max(trust, dependency) * 0.35);
-  target.aiAdoption = clampStat(target.aiAdoption + dependency * 0.35);
+function queueEcho(state: GameState, choice: EventChoice): void {
+  const effects = choice.visibleEffects || {};
+  const headline =
+    choice.echoNews ||
+    ((effects.humanControl || 0) <= -3
+      ? 'MAYA: THEY WILL NOT ASK FOR THAT BACK'
+      : (effects.autonomy || 0) >= 4
+        ? 'MAYA NOTE: YOU DID NOT WAIT'
+        : null);
+  if (!headline) return;
+  state.pendingEchoes.push({ headline, fireOnTurn: state.turn + 1 });
+}
+
+function flushEchoes(state: GameState): void {
+  const due = state.pendingEchoes.filter((item) => item.fireOnTurn <= state.turn);
+  for (const item of due) pushNews(state, item.headline);
+  state.pendingEchoes = state.pendingEchoes.filter((item) => item.fireOnTurn > state.turn);
 }
 
 function clone(state: GameState): GameState {

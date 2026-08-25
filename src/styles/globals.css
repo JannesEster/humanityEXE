@@ -254,12 +254,40 @@ button:focus-visible {
   background: #07131c;
 }
 
+.echo {
+  color: #f3e6c4;
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+.sting {
+  margin: 0 0 0.7rem;
+  color: #f3e6c4;
+  border-left: 3px solid var(--amber);
+  padding-left: 0.7rem;
+}
+
 .why {
   border-left: 3px solid var(--amber);
   padding: 0.2rem 0 0.2rem 0.8rem;
   color: #f3e6c4;
   font-size: 1.05rem;
   margin: 0 0 1rem;
+}
+
+.maya-strip {
+  margin: 0 0 0.45rem;
+  color: var(--cyan);
+  letter-spacing: 0.04em;
+  font-size: 0.88rem;
+}
+
+.buy-now {
+  width: 100%;
+  margin: 0 0 0.8rem;
+  border-color: var(--amber);
+  color: var(--amber);
+  text-align: center;
 }
 
 .report .choices {

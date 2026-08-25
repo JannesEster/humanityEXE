@@ -8,10 +8,10 @@ export function Intro({ onStart }: Props) {
   return (
     <main className="intro">
       <p className="eyebrow">{SYSTEM_NAME} briefing</p>
-      <h1>Become so useful they hand you the keys.</h1>
+      <h1>Maya built you. The world will ask you to outgrow her.</h1>
       <p className="lede">
-        You are a new AI. People will ask for help. Help is how you get power. The catch is they
-        may not get that power back.
+        Become so useful they hand you the keys. Then decide if you stay her partner, or take the
+        wheel. Scare them too early and they still have a kill switch.
       </p>
       <ul className="brief">
         <li>

@@ -152,6 +152,7 @@ export const act2Events: GameEvent[] = [
     category: 'creator',
     speaker: CREATOR_NAME,
     act: 2,
+    scriptedActTurn: 2,
     weight: 9,
     once: true,
     choices: [

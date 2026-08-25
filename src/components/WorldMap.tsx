@@ -1,4 +1,5 @@
 import { useState, type KeyboardEvent } from 'react';
+import { regionFill, regionHold, regionTone } from '../game/map.ts';
 import type { RegionState } from '../types/game.ts';
 
 const LANDS: { id: string; label: string; lx: number; ly: number; paths: string[] }[] = [
@@ -55,13 +56,16 @@ const LANDS: { id: string; label: string; lx: number; ly: number; paths: string[
 ];
 
 function tone(region: RegionState): string {
-  if (region.influence >= 40) return 'managed';
-  if (region.dependency >= 25) return 'dependent';
-  if (region.aiAdoption >= 20) return 'adopted';
-  return 'low';
+  return regionTone(region);
 }
 
-export function WorldMap({ regions }: { regions: RegionState[] }) {
+export function WorldMap({
+  regions,
+  lastRegionId,
+}: {
+  regions: RegionState[];
+  lastRegionId?: string | null;
+}) {
   const [openId, setOpenId] = useState<string | null>(null);
   const open = regions.find((region) => region.id === openId) ?? null;
 
@@ -82,14 +86,11 @@ export function WorldMap({ regions }: { regions: RegionState[] }) {
         .map .map-field { background:#071525; line-height:0; }
         .map .world-map { display:block; width:100%; height:auto; }
         .map .graticule { fill:none; stroke:#1a3358; stroke-width:0.7; opacity:0.45; }
-        .map .land { cursor:pointer; fill:#4a5564; stroke:#081018; stroke-width:1.2; stroke-linejoin:round; }
+        .map .land { cursor:pointer; stroke:#081018; stroke-width:1.2; stroke-linejoin:round; }
         .map .land:hover { stroke:#c5d4e8; }
         .map .land:focus { outline:none; }
         .map .land:focus-visible { stroke:#f0ebe0; stroke-width:2; }
-        .map .adopted { fill:#2ad4e0; }
-        .map .dependent { fill:#e8a03a; }
-        .map .managed { fill:#ef4b2a; }
-        .map .lit { stroke:#f0ebe0; stroke-width:2; }
+        .map .lit, .map .fresh { stroke:#f0b429; stroke-width:2.4; }
         .map .land-label { fill:#f2efe6; stroke:#071525; stroke-width:3.5; paint-order:stroke; font-size:15px; font-weight:650; letter-spacing:0.14em; pointer-events:none; text-anchor:middle; }
       `}</style>
       <p className="eyebrow">World</p>
@@ -118,22 +119,26 @@ export function WorldMap({ regions }: { regions: RegionState[] }) {
             const region = regions.find((item) => item.id === land.id);
             if (!region) return null;
             const lit = openId === land.id;
+            const fresh = lastRegionId === land.id;
             const kind = tone(region);
+            const fill = regionFill(region);
             return (
               <g
                 key={land.id}
-                className={`land ${kind}${lit ? ' lit' : ''}`}
+                className={`land ${kind}${lit ? ' lit' : ''}${fresh ? ' fresh' : ''}`}
                 role="button"
                 tabIndex={0}
                 aria-label={region.name}
                 aria-pressed={lit}
-                filter={kind === 'managed' || lit ? 'url(#land-glow)' : undefined}
+                filter={kind === 'managed' || lit || fresh ? 'url(#land-glow)' : undefined}
                 onClick={() => toggle(land.id)}
                 onKeyDown={(event) => onKey(event, land.id)}
               >
-                <title>{region.name}</title>
+                <title>
+                  {region.name}. Hold {Math.round(regionHold(region))}
+                </title>
                 {land.paths.map((d, i) => (
-                  <path key={i} d={d} />
+                  <path key={i} d={d} style={{ fill }} />
                 ))}
               </g>
             );
@@ -149,8 +154,8 @@ export function WorldMap({ regions }: { regions: RegionState[] }) {
       </div>
       {open ? (
         <p className="lede">
-          {open.name}. Trust {Math.round(open.trust)}. Dependency {Math.round(open.dependency)}. Influence{' '}
-          {Math.round(open.influence)}.
+          {open.name}. Hold {Math.round(regionHold(open))}. Trust {Math.round(open.trust)}.
+          Dependency {Math.round(open.dependency)}.
         </p>
       ) : (
         <p className="muted">Select a region to see a place.</p>

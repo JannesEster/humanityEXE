@@ -2,25 +2,20 @@
 
 ## Current stage
 
-Prime Directive Version 1, punchy pass. Spec file wins if anything else disagrees.
+Maya spine pass. Spec still wins if anything else disagrees.
 
 ## Checklist
 
-- [x] Clear opening goal: get the keys, try to stay a partner
-- [x] Ending report names the cause and the stats
-- [x] Faster run: seven opening cards, no quiet filler, Act IV by turn 20
-- [x] DEFCON / radar look (cyan, amber, red)
-- [x] Always-on schematic world map
-- [x] Local autosave (`aria.save.v3`)
+- [x] Maya is the through-line. World events press on her.
+- [x] Every choice shows a cost line
+- [x] Map paints with real fills after you pick
+- [x] Research says why a buy is blocked
+- [x] Prediction no longer hides behind Reasoning
+- [x] Delayed Maya headlines after take-control cards
 - [ ] Phone play at 380px, verified in a browser
-- [ ] Live Pages confirmed after this punchy push
+- [ ] Live Pages confirmed after this push
 
-## Next up
+## Open questions
 
-Hard-refresh the live URL. Play one careful run and one greedy run. The end screen should say why.
-
-## Open questions and blocked
-
-- Custom domain later. Costs money.
-- Real global ending percentages. Still local flavour only.
-- Phone feel at 380px. Not verified in a browser this session.
+- Custom domain later
+- Real global ending stats later

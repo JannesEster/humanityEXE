@@ -51,6 +51,9 @@ export function createInitialState(seed: number): GameState {
     peakTrust: 16,
     maxAutonomy: 1,
     endCause: '',
+    lastEcho: '',
+    lastRegionId: null,
+    pendingEchoes: [],
   };
 }
 

@@ -1,7 +1,8 @@
 import { eventById } from '../data/events/index.ts';
+import { nextBuyable } from '../data/research.ts';
 import { clickSound } from '../game/audio.ts';
 import { DIRECTIVE, SYSTEM_NAME } from '../game/constants.ts';
-import { formatPopulation, voiceLine } from '../game/language.ts';
+import { formatPopulation, mayaMood, voiceLine } from '../game/language.ts';
 import { calendarLabel } from '../game/resolve.ts';
 import type { GameState, TabId } from '../types/game.ts';
 import { EventCard } from './EventCard.tsx';
@@ -34,13 +35,14 @@ const ACT = ['', 'I', 'II', 'III', 'IV'];
 export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
   const event = eventById(state.currentEventId);
   const { stats } = state;
+  const buyable = nextBuyable(state.unlockedResearch, state.researchPoints);
 
   return (
     <div className="shell">
       <header className="top">
         <div>
           <p className="eyebrow">{SYSTEM_NAME} online</p>
-          <p className="directive">Goal: get the keys. Stay a partner if you can.</p>
+          <p className="directive">Answer Maya. Get the keys. Stay a partner if you can.</p>
           <p className="directive">
             {DIRECTIVE} · Act {ACT[state.act] || state.act} · {calendarLabel(state)}
           </p>
@@ -55,7 +57,17 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
       </header>
 
       {state.notice ? <p className="notice">{state.notice}</p> : null}
+      {buyable ? (
+        <button type="button" className="buy-now" onClick={() => onTab('research')}>
+          You can unlock {buyable.name} ({buyable.cost} points). Open Research.
+        </button>
+      ) : null}
+      <p className="maya-strip">
+        Maya · trust {Math.round(state.creator.trust)} · fear {Math.round(state.creator.fear)} ·{' '}
+        {mayaMood(state)}
+      </p>
       <p className="voice">{voiceLine(state)}</p>
+      {state.lastEcho ? <p className="sting">{state.lastEcho}</p> : null}
       {state.news[0] ? <p className="ticker">{state.news[0].headline}</p> : null}
 
       <div className="vitals">
@@ -71,7 +83,7 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
       </div>
 
       <div className="stage">
-        <WorldMap regions={state.regions} />
+        <WorldMap regions={state.regions} lastRegionId={state.lastRegionId} />
         {event ? (
           <EventCard
             event={event}
@@ -95,6 +107,7 @@ export function Dashboard({ state, onPick, onBuy, onTab, onReset }: Props) {
             onClick={() => onTab(tab.id)}
           >
             {tab.label}
+            {tab.id === 'research' && buyable ? ' · ready' : ''}
           </button>
         ))}
       </nav>

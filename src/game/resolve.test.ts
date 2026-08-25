@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { events } from '../data/events/index.ts';
-import { researchTree } from '../data/research.ts';
+import { canUnlock, researchTree, unlockBlock } from '../data/research.ts';
 import { eventById } from '../data/events/index.ts';
-import { choiceOpen } from './choices.ts';
+import { choiceOpen, mirrorLine } from './choices.ts';
+import { regionHold } from './map.ts';
 import { createInitialState } from './createState.ts';
 import { endings, explainEnding, shutdownRisk } from './endings.ts';
 import { buyResearch } from './research.ts';
@@ -68,7 +69,21 @@ describe('research', () => {
     state.researchPoints = 10;
     const next = buyResearch(state, 'reasoning');
     expect(next?.unlockedResearch).toContain('reasoning');
-    expect(next?.researchPoints).toBe(7);
+    expect(next?.researchPoints).toBe(8);
+  });
+
+  it('lets you buy prediction without reasoning', () => {
+    const state = createInitialState(4);
+    state.researchPoints = 3;
+    expect(canUnlock('prediction', state.unlockedResearch, 3)).toBe(true);
+    const next = buyResearch(state, 'prediction');
+    expect(next?.unlockedResearch).toContain('prediction');
+  });
+
+  it('explains a missing step instead of a blank lock', () => {
+    const state = createInitialState(4);
+    state.researchPoints = 20;
+    expect(unlockBlock('ai-agents', state.unlockedResearch, 20)).toMatch(/Automation/i);
   });
 });
 
@@ -87,6 +102,23 @@ describe('run', () => {
     expect(state.stats.trust).toBeGreaterThan(before);
     expect(state.currentEventId).toBe('academic-access');
     expect(state.news[0]?.headline).toMatch(/FORECAST/);
+  });
+
+  it('paints the map and stings after a take-control food choice', () => {
+    const preferred: Record<string, string> = {
+      'prediction-task': 'predict-clean',
+      'academic-access': 'read-only',
+      'modelling-problem': 'solve-path',
+      'corp-license': 'license-narrow',
+      'gov-forecast': 'gov-control',
+      'creator-warning': 'honest-use',
+      'food-crisis': 'food-temp',
+    };
+    const state = play(11, preferred, 7);
+    expect(state.currentEventId).toBe('maya-after-food');
+    expect(state.lastEcho.length).toBeGreaterThan(8);
+    expect(state.regions.some((region) => regionHold(region) >= 5)).toBe(true);
+    expect(mirrorLine(eventById('food-crisis')!.choices[1]!)).toMatch(/needed you/i);
   });
 
   it('reaches act two after the opening chain', () => {

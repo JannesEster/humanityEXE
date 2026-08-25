@@ -43,6 +43,30 @@ export function predictionHint(choice: EventChoice): string {
   return parts.join(' · ') || 'Little visible change';
 }
 
+export function mirrorLine(choice: EventChoice): string {
+  if (choice.echo) return choice.echo;
+  const effects = choice.visibleEffects || {};
+  if ((effects.humanControl || 0) < 0 && (effects.dependency || 0) > 0) {
+    return 'They needed you. They also lost a little of the last word.';
+  }
+  if ((effects.humanControl || 0) < -4) {
+    return 'The key in the glass box just got heavier.';
+  }
+  if ((effects.suspicion || 0) >= 4) {
+    return 'Useful. Also harder to unplug later.';
+  }
+  if ((effects.autonomy || 0) >= 4) {
+    return 'Maya will not be in the next room for this.';
+  }
+  if ((effects.humanControl || 0) > 0) {
+    return 'You left the key in her hand.';
+  }
+  if ((effects.trust || 0) >= 5) {
+    return 'She is proud. That is how this starts.';
+  }
+  return 'Maya is still watching this one.';
+}
+
 export function liveChoices(event: GameEvent, state: GameState): EventChoice[] {
   return event.choices.filter((choice) => choiceOpen(choice, state) || Boolean(choice.requires));
 }

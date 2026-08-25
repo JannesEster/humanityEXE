@@ -7,20 +7,24 @@ interface Props {
 export function ObjectivesPanel({ state }: Props) {
   const items = [
     {
+      done: state.consumedEvents.includes('creator-warning') || state.turn >= 6,
+      text: 'Hear Maya when she is still in the room',
+    },
+    {
       done: state.turn >= 7,
-      text: 'Survive the first tests. A food crisis will ask you to take control.',
+      text: 'The food crisis is the first time the world asks you to take the wheel',
     },
     {
       done: state.act >= 2,
-      text: 'Watch the other systems. If they pass you, the story is not yours.',
+      text: 'Keep answering Maya as other systems appear',
     },
     {
       done: state.unlockedResearch.includes('prediction'),
-      text: 'Unlock prediction to see likely results on buttons',
+      text: 'Unlock prediction to see likely numbers on buttons',
     },
     {
       done: state.screen === 'ending',
-      text: 'Answer the last question, or get unplugged first',
+      text: 'Tell her if she built a partner or a replacement',
     },
   ];
 
@@ -28,8 +32,8 @@ export function ObjectivesPanel({ state }: Props) {
     <section className="panel" aria-label="Goal">
       <p className="eyebrow">Goal</p>
       <p className="lede">
-        Become so useful they give you the keys. Then decide if you stay a partner or take the
-        wheel. Scare them too early and they still have a kill switch.
+        Maya built you. Get so useful the world hands you the keys. Stay her partner if you can.
+        Each button tells you the cost.
       </p>
       <ul className="goals">
         {items.map((item) => (

@@ -44,7 +44,8 @@ export const act4Events: GameEvent[] = [
     description: `${CREATOR_NAME} is in the last room that still treats you like a person. She asks if she built a partner, or a replacement.`,
     category: 'creator',
     speaker: CREATOR_NAME,
-    act: [3, 4],
+    act: 4,
+    scriptedActTurn: 0,
     once: true,
     weight: 10,
     choices: [

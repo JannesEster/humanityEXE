@@ -52,6 +52,11 @@ export interface ScheduledEvent {
   fireOnTurn: number;
 }
 
+export interface PendingEcho {
+  headline: string;
+  fireOnTurn: number;
+}
+
 export type EventCategory =
   | 'creator'
   | 'corporate'
@@ -95,6 +100,8 @@ export interface EventChoice {
   flagsSet?: string[];
   queueEvents?: QueuedEvent[];
   news?: string[];
+  echo?: string;
+  echoNews?: string;
   requires?: ChoiceRequires;
   regionId?: string;
   researchPoints?: number;
@@ -118,6 +125,7 @@ export interface GameEvent {
   weight?: number;
   once?: boolean;
   scriptedTurn?: number;
+  scriptedActTurn?: number;
   requirements?: {
     flags?: string[];
     minStats?: Partial<GlobalStats>;
@@ -129,7 +137,7 @@ export interface GameEvent {
 export type Screen = 'intro' | 'play' | 'ending';
 
 export interface GameState {
-  version: 3;
+  version: 4;
   seed: number;
   turn: number;
   year: number;
@@ -159,10 +167,13 @@ export interface GameState {
   peakTrust: number;
   maxAutonomy: number;
   endCause: string;
+  lastEcho: string;
+  lastRegionId: string | null;
+  pendingEchoes: PendingEcho[];
 }
 
 export interface SaveFile {
-  version: 3;
+  version: 4;
   savedAt: string;
   gameState: GameState;
 }

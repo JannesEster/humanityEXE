@@ -41,6 +41,11 @@ export function selectEvent(state: GameState, rng: () => number): GameEvent | nu
   );
   if (scripted) return scripted;
 
+  const actBeat = events.find(
+    (event) => event.scriptedActTurn === state.actTurn && isEligible(event, state),
+  );
+  if (actBeat) return actBeat;
+
   const due = state.queuedEvents
     .filter((item) => item.fireOnTurn <= state.turn)
     .map((item) => eventById(item.eventId))
@@ -49,6 +54,7 @@ export function selectEvent(state: GameState, rng: () => number): GameEvent | nu
 
   const pool = events.filter((event) => {
     if (event.scriptedTurn !== undefined) return false;
+    if (event.scriptedActTurn !== undefined) return false;
     if (event.id === 'resolution') return false;
     return isEligible(event, state);
   });

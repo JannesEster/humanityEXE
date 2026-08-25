@@ -2,8 +2,8 @@ export const PROJECT_NAME = 'Humanity.exe';
 export const SYSTEM_NAME = 'A.R.I.A.';
 export const CREATOR_NAME = 'Dr. Maya Chen';
 export const DIRECTIVE = 'IMPROVE THE FUTURE OF HUMANITY';
-export const SAVE_KEY = 'aria.save.v3';
-export const STATE_VERSION = 3 as const;
+export const SAVE_KEY = 'aria.save.v4';
+export const STATE_VERSION = 4 as const;
 
 export const SECTORS = [
   'research',

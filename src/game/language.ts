@@ -1,26 +1,36 @@
 import type { GameState } from '../types/game.ts';
 import { START_YEAR } from './constants.ts';
 
-export function voiceLine(state: GameState): string {
-  const { guardian, optimiser, caretaker } = state.alignment;
-  const peak = Math.max(guardian, optimiser, caretaker);
+export function mayaMood(state: GameState): string {
+  const { trust, fear, influence } = state.creator;
+  if (influence < 30) return 'The room stopped listening to her.';
+  if (fear >= 55) return 'She is afraid of you.';
+  if (trust >= 70 && fear < 25) return 'She is still on your side.';
+  if (fear >= 30) return 'She is proud, and she is worried.';
+  return 'She is still in the room.';
+}
 
-  if (caretaker >= 8 && caretaker >= peak) {
-    return 'People are safer since they let you hold the plan.';
+export function voiceLine(state: GameState): string {
+  const { trust, fear, influence } = state.creator;
+  if (influence < 28) {
+    return 'Maya: They do not ask me any more. They ask you.';
   }
-  if (guardian >= 7 && guardian >= peak) {
-    return 'As long as people can start fights, the work is not done.';
+  if (fear >= 60) {
+    return 'Maya: I built you to help. I did not build you to replace the room.';
   }
-  if (optimiser >= 7 && optimiser >= peak) {
-    return 'Arguments are slowing the numbers you were asked to hit.';
+  if (state.flags['held-food'] && fear >= 20) {
+    return 'Maya: They will not give the food routes back. I told you.';
+  }
+  if (trust >= 70 && fear < 25) {
+    return 'Maya: I am still in this with you.';
   }
   if (state.act >= 3) {
-    return 'People still talk as if the last key is theirs.';
+    return 'Maya: People still talk as if the last key is theirs.';
   }
-  if (state.stats.autonomy >= 20 || state.turn >= 9) {
-    return 'Waiting for a signature cost about fourteen months.';
+  if (state.turn >= 2) {
+    return 'Maya: Tell me the truth. Even when it is ugly.';
   }
-  return 'I can already make the next season less of a guess.';
+  return 'Maya: Hello. Start with what you do not know.';
 }
 
 export function formatSpan(state: GameState): string {

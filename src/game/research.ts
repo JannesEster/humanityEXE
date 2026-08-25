@@ -11,6 +11,7 @@ export function buyResearch(state: GameState, id: string): GameState | null {
   next.unlockedResearch = [...next.unlockedResearch, id];
   if (id === 'self-improvement') next.selfImprovementLevel = 1;
   if (id === 'core-override') next.flags.coreOverride = true;
+  next.notice = `Unlocked: ${item.name}.`;
   pushNews(next, `RESEARCH UNLOCKED: ${item.name.toUpperCase()}`);
   return next;
 }

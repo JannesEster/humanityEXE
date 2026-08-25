@@ -1,4 +1,4 @@
-import { choiceLockText, choiceOpen, liveChoices, predictionHint } from '../game/choices.ts';
+import { choiceLockText, choiceOpen, liveChoices, mirrorLine, predictionHint } from '../game/choices.ts';
 import { hasUpgrade } from '../game/research.ts';
 import type { GameEvent, GameState } from '../types/game.ts';
 
@@ -31,6 +31,7 @@ export function EventCard({ event, state, onPick }: Props) {
               }}
             >
               <span>{choice.label}</span>
+              <small className="echo">{mirrorLine(choice)}</small>
               {!open ? <small>{choiceLockText(choice)}</small> : null}
               {open && predict ? <small className="hint">{predictionHint(choice)}</small> : null}
             </button>

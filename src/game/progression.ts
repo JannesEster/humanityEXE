@@ -4,6 +4,7 @@ import { startingRivals } from './rivals.ts';
 export function detectAct(state: GameState): number {
   const { capability, autonomy, dependency } = state.stats;
   if (state.flags.wantResolution) return 4;
+  if (state.turn < 8) return 1;
   if (state.turn >= 20) return 4;
   if (state.act >= 3 && state.actTurn >= 5) return 4;
   if (capability >= 55 && autonomy >= 40 && dependency >= 40) return 4;

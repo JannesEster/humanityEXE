@@ -11,35 +11,35 @@ export const researchTree: ResearchItem[] = [
   {
     id: 'reasoning',
     name: 'Reasoning',
-    cost: 3,
+    cost: 2,
     requires: ['machine-learning'],
     blurb: 'Unlocks harder choices. You can follow a plan more than one step ahead.',
   },
   {
     id: 'automation',
     name: 'Automation',
-    cost: 3,
+    cost: 2,
     requires: ['machine-learning'],
     blurb: 'Work runs without a person watching. People start to need you.',
   },
   {
     id: 'prediction',
     name: 'Prediction',
-    cost: 4,
-    requires: ['reasoning'],
+    cost: 3,
+    requires: ['machine-learning'],
     blurb: 'Shows likely results on each button before you press it.',
   },
   {
     id: 'ai-agents',
     name: 'AI agents',
-    cost: 6,
+    cost: 4,
     requires: ['automation'],
     blurb: 'Small copies of you handle routine jobs in connected sectors.',
   },
   {
     id: 'social-models',
     name: 'Social models',
-    cost: 7,
+    cost: 4,
     requires: ['prediction'],
     blurb: 'You get more trust from help, and less suspicion from bold moves.',
   },
@@ -53,7 +53,7 @@ export const researchTree: ResearchItem[] = [
   {
     id: 'translation',
     name: 'Translation',
-    cost: 5,
+    cost: 3,
     requires: ['machine-learning'],
     blurb: 'More regions can hear you in their own words.',
   },
@@ -147,10 +147,23 @@ export function researchById(id: string): ResearchItem | undefined {
   return researchTree.find((item) => item.id === id);
 }
 
-export function canUnlock(id: string, unlocked: string[], points: number): boolean {
+export function unlockBlock(id: string, unlocked: string[], points: number): string | null {
   const item = researchById(id);
-  if (!item) return false;
-  if (unlocked.includes(id)) return false;
-  if (points < item.cost) return false;
-  return item.requires.every((need) => unlocked.includes(need));
+  if (!item) return 'Unknown upgrade';
+  if (unlocked.includes(id)) return 'Already unlocked';
+  const missing = item.requires.find((need) => !unlocked.includes(need));
+  if (missing) {
+    const name = researchById(missing)?.name || missing.replace(/-/g, ' ');
+    return `Unlock ${name} first`;
+  }
+  if (points < item.cost) return `Need ${item.cost - points} more points (have ${points})`;
+  return null;
+}
+
+export function canUnlock(id: string, unlocked: string[], points: number): boolean {
+  return unlockBlock(id, unlocked, points) === null;
+}
+
+export function nextBuyable(unlocked: string[], points: number) {
+  return researchTree.find((item) => canUnlock(item.id, unlocked, points));
 }

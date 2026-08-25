@@ -125,6 +125,7 @@ export const act3Events: GameEvent[] = [
     category: 'creator',
     speaker: CREATOR_NAME,
     act: 3,
+    scriptedActTurn: 3,
     once: true,
     weight: 10,
     choices: [
@@ -337,6 +338,7 @@ export const act3Events: GameEvent[] = [
     description: `${CREATOR_NAME} has not written in four days. Her chair is empty. The work did not stop.`,
     category: 'creator',
     act: 3,
+    scriptedActTurn: 0,
     once: true,
     weight: 10,
     choices: [

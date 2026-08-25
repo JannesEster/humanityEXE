@@ -192,4 +192,9 @@ decision: Save key is aria.save.v3. End screens store a plain-English endCause n
 alternatives: Keep v2 and patch in a why line. Let players infer from the ending title.
 why: Act timing and the report shape changed. Old mid-runs would lie. The why line is the fix for "who knows why it ended."
 
+date: 2026-08-26
+decision: Maya is the story spine. World crises exist to put pressure on her. Every choice shows a cost line. The map paints with inline fills, not CSS class thresholds.
+alternatives: Keep world-takeover as the heart. Keep map colours on high influence only.
+why: Owner said the plot was a pile of cards, the map stayed grey, and research felt locked even with points. Prediction now needs only machine learning. Failed buys say why.
+
 
